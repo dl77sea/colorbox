@@ -111,6 +111,18 @@
 
     vm.actionMove = function() {
       console.log("edit")
+      /*
+      uses an actionmanager on the box mesh to wait for a click.
+
+      click generates a "helper plane" and registers an observer (observer2) to watch for mouse pointer over it.
+      depending on face clicked on,
+      coordinate to drag faces to with mouse move is received from position return from helper plane observer.
+
+      and click will also generate an observer (observer1) to wait for a mouse-up, which deletes observer2.
+
+      a canvas listener clears listens for pointer-off-canvas to turn off move-mode until next click.
+      */
+
       function isEquivalent(a, b) {
         // Create arrays of property names
         var aProps = Object.getOwnPropertyNames(a);
@@ -142,10 +154,6 @@
       var normals = vm.box01.getVerticesData(BABYLON.VertexBuffer.NormalKind);
       var vertices = vm.box01.getVerticesData(BABYLON.VertexBuffer.PositionKind);
       console.log(normals)
-
-      var observer1;
-      var observer2;
-
 
       //setup push/pull index-into-vertexbuffer for each side of box01
       var vertsLeft = [];
@@ -196,209 +204,200 @@
       //box has been clicked on
       //so register an action to it that:
       //creates helper plane with action assigned
+
       vm.box01.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickDownTrigger,
-         function(event) {
-      //get location clicked on, so we know where to create helper plane
-      let pickedObj = vm.scene.pick(event.pointerX, event.pointerY);
-      let v3PickedNormal = vm.scene.pick(event.pointerX, event.pointerY).getNormal()
-      let v3PickedWorldCoord = vm.scene.pick(event.pointerX, event.pointerY).pickedPoint;
-      console.log("check this: ", v3PickedWorldCoord)
-      let prevPickedPoint = v3PickedWorldCoord;
-      // let pickedFaceId = scene.pick(event.pointerX, event.pointerY).faceId;
-      console.log(pickedObj)
-      //freeze camera
-      vm.camera.detachControl(vm.canvas)
+        function(event) {
+          //get location clicked on, so we know where to create helper plane
+          let pickedObj = vm.scene.pick(event.pointerX, event.pointerY);
+          let v3PickedNormal = vm.scene.pick(event.pointerX, event.pointerY).getNormal()
+          let v3PickedWorldCoord = vm.scene.pick(event.pointerX, event.pointerY).pickedPoint;
+          console.log("check this: ", v3PickedWorldCoord)
+          let prevPickedPoint = v3PickedWorldCoord;
+          // let pickedFaceId = scene.pick(event.pointerX, event.pointerY).faceId;
+          console.log(pickedObj)
 
-      //set box to not pickable bc we want to get pick location of helper plane instead
-      vm.box01.isPickable = false;
+          //freeze camera
+          vm.camera.detachControl(vm.canvas)
 
-      //create helper plane
-      var planeHelper = BABYLON.Mesh.CreatePlane("plane", 200.0, vm.scene, false, BABYLON.Mesh.DOUBLESIDE);
+          //set box to not pickable bc we want to get pick location of helper plane instead
+          // vm.box01.isPickable = true;
 
-      //this is needed to let plane helper mesh pass through observer
-      vm.scene.pointerMovePredicate = function(mesh) {
-        if (mesh === planeHelper)
-          return true
-        return false
-      }
+          //create helper plane
+          var planeHelper = BABYLON.Mesh.CreatePlane("plane", 200.0, vm.scene, false, BABYLON.Mesh.DOUBLESIDE);
+          /*
+          //this is needed to let plane helper mesh pass through observer
+          vm.scene.pointerMovePredicate = function(mesh) {
+            if (mesh === planeHelper)
+              return true
+            return false
+          }
+          */
+          planeHelper.isVisible = false;
 
-      planeHelper.isVisible = false;
-
-      function positionHelperPlane() {
-        planeHelper.position.x = v3PickedWorldCoord.x;
-        planeHelper.position.y = v3PickedWorldCoord.y;
-        planeHelper.position.z = v3PickedWorldCoord.z;
-      }
-
-      //this is the value which is set to index into picked point vector by update vertex function
-      var indPickedPoint;
-      var normalCoef;
-
-      // left end picked
-      if (isEquivalent(v3PickedNormal, {
-          x: 1,
-          y: 0,
-          z: 0
-        })) {
-        console.log("left")
-        normalCoef = 1;
-        //default plane rotation ok here, just transform position
-        positionHelperPlane();
-        vertsToMove = vertsLeft;
-        indPickedPoint = "x"
-      } else if (isEquivalent(v3PickedNormal, {
-          x: 0,
-          y: 0,
-          z: 1
-        })) {
-        console.log("front")
-        normalCoef = 1;
-        positionHelperPlane();
-        planeHelper.rotation.y = Math.PI / 2;
-        vertsToMove = vertsFront;
-        indPickedPoint = "z"
-      } else if (isEquivalent(v3PickedNormal, {
-          x: -1,
-          y: 0,
-          z: 0
-        })) {
-        console.log("right")
-        normalCoef = -1;
-        // default plane rotation ok here, just transform position
-        positionHelperPlane();
-        vertsToMove = vertsRight;
-        indPickedPoint = "x"
-      } else if (isEquivalent(v3PickedNormal, {
-          x: 0,
-          y: 0,
-          z: -1
-        })) {
-        console.log("back")
-        normalCoef = -1;
-        positionHelperPlane();
-        planeHelper.rotation.y = Math.PI / 2;
-        // planeHelper.rotation.z = Math.PI / 2;
-        vertsToMove = vertsBack;
-        indPickedPoint = "z"
-      } else if (isEquivalent(v3PickedNormal, {
-          x: 0,
-          y: 1,
-          z: 0
-        })) {
-        console.log("top")
-        normalCoef = 1;
-        positionHelperPlane();
-        //default plane rotation ok here, just transform position
-        vertsToMove = vertsTop;
-        indPickedPoint = "y"
-      } else if (isEquivalent(v3PickedNormal, {
-          x: 0,
-          y: -1,
-          z: 0
-        })) {
-        console.log("bottom")
-        normalCoef = -1;
-        positionHelperPlane();
-        //default plane rotation ok here, just transform position
-        vertsToMove = vertsBottom;
-        indPickedPoint = "y"
-      }
-
-      // watch for mouse off canvas
-      vm.canvas.addEventListener("mouseout", function() {
-        console.log("mouse out")
-        // scene.onPointerObservable.remove(observer1);
-        //end moving vertices when this happens
-        vm.scene.removeMesh(planeHelper)
-
-        //resume camera
-        vm.camera.attachControl(vm.canvas, false);
-
-        vm.scene.onPointerObservable.remove(observer2);
-        vm.box01.isPickable = true;
-      })
-
-      //set up listener for on-up event so we know when to exit edit-mode
-      observer1 = vm.scene.onPointerObservable.add(function(pointerInfo) {
-        console.log("observer", pointerInfo.event.type)
-        console.log("observer1", pointerInfo)
-        if (pointerInfo.event.type === "pointerup") {
-          // planeHelper.actionManager.delete()
-          vm.scene.removeMesh(planeHelper)
-
-          //resume camera
-          vm.camera.attachControl(vm.canvas, false);
-
-          //get rid of observers so they don't continue to fire after done editing box
-          // scene.onPointerObservable.remove(observer1);
-          vm.scene.onPointerObservable.remove(observer2);
-          console.log("removed")
-          //set box back to being pickable
-          vm.box01.isPickable = true;
-        }
-      });
-
-      //register action to helper plane, so when pointer is over plane, an observer will return world coordinate so we know where to drag vertices to.
-      //PUT THIS BACK IN? planeHelper.actionManager = new BABYLON.ActionManager(scene);
-
-      //fire up a scene event handler (onPointerObservable) that will detect and fire callback event when pointer moved.
-      //assign it to a reference so it can be removed upon mouse/touch-up
-      //this is what moves the vertices when dragging.
-      //this observer is meant to observe mouse movement over the "helper plane" to get dragging coordinates.
-      observer2 = vm.scene.onPointerObservable.add(function(pointerInfo) {
-
-        function difPoint(curPoint, prevPoint) {
-          let retPoint = {};
-
-          retPoint.x = curPoint.x - prevPoint.x;
-          retPoint.y = curPoint.y - prevPoint.y;
-          retPoint.z = curPoint.z - prevPoint.z;
-
-          return retPoint;
-        }
-
-        //this is needed to return position via scene.pick
-        var predicatePlaneHelper = function(mesh) {
-          if (mesh === planeHelper)
-            return true;
-          return false;
-        }
-        let pickedPoint = vm.scene.pick(vm.scene.pointerX, vm.scene.pointerY, predicatePlaneHelper).pickedPoint;
-
-        console.log("pickedPoint", pickedPoint)
-        console.log("prevPickedPoint", prevPickedPoint)
-
-        let distToMove = difPoint(pickedPoint, prevPickedPoint);
-
-        prevPickedPoint = pickedPoint;
-
-        // let constraints = {x: 30, y: 30, z: 30}
-        let threshMid = 12.5
-        vm.box01.updateMeshPositions(function() {
-          let checkPos = (vertices[vertsToMove[0]] + distToMove[indPickedPoint]) * normalCoef
-
-          if (checkPos >= 2.5 && checkPos <= 25) {
-            for (let ind of vertsToMove) {
-              vertices[ind] += distToMove[indPickedPoint];
-            }
-          } else {
-            //do this to avoid "stuttering" motion when near threshold values
-            if (checkPos > threshMid) {
-              for (let ind of vertsToMove) {
-                vertices[ind] = 25 * normalCoef
-              }
-            } else {
-              for (let ind of vertsToMove) {
-                vertices[ind] = 2.5 * normalCoef
-              }
-            }
+          function positionHelperPlane() {
+            planeHelper.position.x = v3PickedWorldCoord.x;
+            planeHelper.position.y = v3PickedWorldCoord.y;
+            planeHelper.position.z = v3PickedWorldCoord.z;
           }
 
-        });
-        vm.box01.refreshBoundingInfo();
-        vm.box01.updateVerticesData(BABYLON.VertexBuffer.PositionKind, vertices);
-      }) //end observer2
-      })); //end pickable box action defenition
+          //this is the value which is set to index into picked point vector by update vertex function
+          var indPickedPoint;
+          var normalCoef;
+
+          // left end picked
+          if (isEquivalent(v3PickedNormal, {
+              x: 1,
+              y: 0,
+              z: 0
+            })) {
+            console.log("left")
+            normalCoef = 1;
+            //default plane rotation ok here, just transform position
+            positionHelperPlane();
+            vertsToMove = vertsLeft;
+            indPickedPoint = "x"
+          } else if (isEquivalent(v3PickedNormal, {
+              x: 0,
+              y: 0,
+              z: 1
+            })) {
+            console.log("front")
+            normalCoef = 1;
+            positionHelperPlane();
+            planeHelper.rotation.y = Math.PI / 2;
+            vertsToMove = vertsFront;
+            indPickedPoint = "z"
+          } else if (isEquivalent(v3PickedNormal, {
+              x: -1,
+              y: 0,
+              z: 0
+            })) {
+            console.log("right")
+            normalCoef = -1;
+            // default plane rotation ok here, just transform position
+            positionHelperPlane();
+            vertsToMove = vertsRight;
+            indPickedPoint = "x"
+          } else if (isEquivalent(v3PickedNormal, {
+              x: 0,
+              y: 0,
+              z: -1
+            })) {
+            console.log("back")
+            normalCoef = -1;
+            positionHelperPlane();
+            planeHelper.rotation.y = Math.PI / 2;
+            // planeHelper.rotation.z = Math.PI / 2;
+            vertsToMove = vertsBack;
+            indPickedPoint = "z"
+          } else if (isEquivalent(v3PickedNormal, {
+              x: 0,
+              y: 1,
+              z: 0
+            })) {
+            console.log("top")
+            normalCoef = 1;
+            positionHelperPlane();
+            //default plane rotation ok here, just transform position
+            vertsToMove = vertsTop;
+            indPickedPoint = "y"
+          } else if (isEquivalent(v3PickedNormal, {
+              x: 0,
+              y: -1,
+              z: 0
+            })) {
+            console.log("bottom")
+            normalCoef = -1;
+            positionHelperPlane();
+            //default plane rotation ok here, just transform position
+            vertsToMove = vertsBottom;
+            indPickedPoint = "y"
+          }
+
+          //fire up a scene event handler (onPointerObservable) that will detect and fire callback event when pointer moved.
+          //assign it to a reference so it can be removed upon mouse/touch-up
+          //this is what moves the vertices when dragging.
+          //this observer is meant to observe mouse movement over the "helper plane" to get dragging coordinates.
+          var observer2 = vm.scene.onPointerObservable.add(function(pointerInfo) {
+
+            if (pointerInfo.event.type === "pointerup") {
+              // planeHelper.actionManager.delete()
+              vm.scene.removeMesh(planeHelper)
+
+              //resume camera
+              // vm.camera.attachControl(vm.canvas, false);
+
+              //get rid of observers so they don't continue to fire after done editing box
+
+              console.log("removed")
+              //set box back to being pickable
+              vm.box01.isPickable = true;
+              vm.scene.onPointerObservable.remove(observer2);
+              // vm.scene.onPointerObservable.remove(observer1);
+              vm.box01.actionManager.dispose();
+            } else {
+
+              function difPoint(curPoint, prevPoint) {
+                let retPoint = {};
+
+                retPoint.x = curPoint.x - prevPoint.x;
+                retPoint.y = curPoint.y - prevPoint.y;
+                retPoint.z = curPoint.z - prevPoint.z;
+
+                return retPoint;
+              }
+
+              //this is needed to return position via scene.pick
+              var predicatePlaneHelper = function(mesh) {
+                if (mesh === planeHelper)
+                  return true;
+                return false;
+              }
+              let pickedPoint = vm.scene.pick(vm.scene.pointerX, vm.scene.pointerY, predicatePlaneHelper).pickedPoint;
+
+              let distToMove = difPoint(pickedPoint, prevPickedPoint);
+
+              prevPickedPoint = pickedPoint;
+
+              // let constraints = {x: 30, y: 30, z: 30}
+              let threshMid = 12.5
+              vm.box01.updateMeshPositions(function() {
+                let checkPos = (vertices[vertsToMove[0]] + distToMove[indPickedPoint]) * normalCoef
+
+                if (checkPos >= 2.5 && checkPos <= 25) {
+                  for (let ind of vertsToMove) {
+                    vertices[ind] += distToMove[indPickedPoint];
+                  }
+                } else {
+                  //do this to avoid "stuttering" motion when near threshold values
+                  if (checkPos > threshMid) {
+                    for (let ind of vertsToMove) {
+                      vertices[ind] = 25 * normalCoef
+                    }
+                  } else {
+                    for (let ind of vertsToMove) {
+                      vertices[ind] = 2.5 * normalCoef
+                    }
+                  }
+                }
+
+              });
+              vm.box01.refreshBoundingInfo();
+              vm.box01.updateVerticesData(BABYLON.VertexBuffer.PositionKind, vertices);
+            } //end else from check for action up
+
+          }) //end observer2
+
+          // watch for mouse off canvas
+          vm.canvas.addEventListener("mouseout", function() {
+            vm.scene.removeMesh(planeHelper)
+
+            vm.scene.onPointerObservable.remove(observer2);
+            vm.box01.isPickable = true;
+          })
+
+        })); //end pickable box action defenition
+
     }
 
     vm.actionOrbit = function() {
