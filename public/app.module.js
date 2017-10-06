@@ -1,5 +1,5 @@
 (function() {
   'use strict'
   // angular.module('app', ['ui.router', 'angularMoment'])
-  angular.module('app', [])
+  angular.module('app', ['ui.router'])
 }());

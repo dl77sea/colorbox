@@ -4,8 +4,11 @@
       controller: controller,
       template: `
         <div class="temp-display">
-          <a>orbit view</a>
-          <canvas class="canvas-style" id="editCanvas"></canvas>
+          <a ng-click="$ctrl.actionOrbit()">orbit view</a>
+          <div class="canvas-style center-align">
+            <canvas class="canvas-style" id="editCanvas"></canvas>
+            <a ng-click="$ctrl.actionSubmit()">submit</a>
+          </div>
           <a ng-click="$ctrl.actionMove()">move faces</a>
         </div>
         `
@@ -107,6 +110,8 @@
         vm.scene.render();
       });
 
+      //this is the description of the box that gets submitted to database
+      vm.box = {a:"snarf"};
     }
 
     vm.actionMove = function() {
@@ -114,11 +119,10 @@
       /*
       uses an actionmanager on the box mesh to wait for a click.
 
-      click generates a "helper plane" and registers an observer (observer2) to watch for mouse pointer over it.
-      depending on face clicked on,
+      click generates a "helper plane" and registers an observer (observer2) on the scene
+      to watch for mouse pointer over it. epending on face clicked on,
       coordinate to drag faces to with mouse move is received from position return from helper plane observer.
-
-      and click will also generate an observer (observer1) to wait for a mouse-up, which deletes observer2.
+      will also check for mouse-up to end action.
 
       a canvas listener clears listens for pointer-off-canvas to turn off move-mode until next click.
       */
@@ -318,7 +322,8 @@
           //assign it to a reference so it can be removed upon mouse/touch-up
           //this is what moves the vertices when dragging.
           //this observer is meant to observe mouse movement over the "helper plane" to get dragging coordinates.
-          var observer2 = vm.scene.onPointerObservable.add(function(pointerInfo) {
+
+          function observerCb(pointerInfo) {
 
             if (pointerInfo.event.type === "pointerup") {
               // planeHelper.actionManager.delete()
@@ -331,10 +336,16 @@
 
               console.log("removed")
               //set box back to being pickable
-              vm.box01.isPickable = true;
-              vm.scene.onPointerObservable.remove(observer2);
+              //vm.box01.isPickable = true;
+              vm.scene.removeMesh(planeHelper)
               // vm.scene.onPointerObservable.remove(observer1);
-              vm.box01.actionManager.dispose();
+
+              vm.scene.onPointerObservable.remove(vm.observer2);
+
+              // vm.scene.onPointerObservable.removeCallback(observerCb);
+              // console.log("before rem am: ", vm.box01.actionManager.actions.OnPickTrigger)
+
+              // console.log("after rem am: ", vm.box01.actionManager)
             } else {
 
               function difPoint(curPoint, prevPoint) {
@@ -354,7 +365,6 @@
                 return false;
               }
               let pickedPoint = vm.scene.pick(vm.scene.pointerX, vm.scene.pointerY, predicatePlaneHelper).pickedPoint;
-
               let distToMove = difPoint(pickedPoint, prevPickedPoint);
 
               prevPickedPoint = pickedPoint;
@@ -386,14 +396,18 @@
               vm.box01.updateVerticesData(BABYLON.VertexBuffer.PositionKind, vertices);
             } //end else from check for action up
 
-          }) //end observer2
-
+          } //end observer2 callback
+          // console.log("before add: ", observer2)
+          console.log("has obs before add: ", vm.scene.onPointerObservable);
+          vm.observer2 = vm.scene.onPointerObservable.add(observerCb);
+          console.log("has obs after add: ", vm.scene.onPointerObservable);
           // watch for mouse off canvas
           vm.canvas.addEventListener("mouseout", function() {
             vm.scene.removeMesh(planeHelper)
 
-            vm.scene.onPointerObservable.remove(observer2);
-            vm.box01.isPickable = true;
+            vm.scene.onPointerObservable.remove(vm.observer2);
+            // vm.box01.isPickable = true;
+            // vm.box01.actionManager.dispose();
           })
 
         })); //end pickable box action defenition
@@ -402,6 +416,14 @@
 
     vm.actionOrbit = function() {
       console.log("orbit")
+      vm.box01.actionManager.actions = [];
+      // vm.box01.actionManager.dispose();
+      vm.scene.onPointerObservable.remove(vm.observer2);
+      vm.camera.attachControl(vm.canvas, false);
+    }
+
+    vm.actionSubmit = function() {
+      console.log(vm.box)
     }
   }
 }());

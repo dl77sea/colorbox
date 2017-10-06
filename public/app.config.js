@@ -1,5 +1,4 @@
 (function() {
-  /*
   'use strict';
   console.log('Hello config iffe');
   angular.module('app').config(config)
@@ -21,14 +20,13 @@
         name: 'posts',
         url: '/',
         parent: 'nav',
-        component: 'posts'
+        component: 'post'
       })
       .state({
         name: 'edit',
-        url: '/posts/:id/edit',
+        url: '/edit',
         parent: 'nav',
-        component: 'editpost'
+        component: 'edit'
       })
   }
-*/
 }());

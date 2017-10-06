@@ -7,6 +7,7 @@ body {
  main {
    flex: 1 0 auto;
  }
+
  .temp-display {
    display: flex;
    width: 100%;
@@ -15,6 +16,9 @@ body {
    align-content: center;
  }
 
+.canvas-div {
+  display: block;
+}
  .canvas-style {
    outline: none;
    width: 250px;
