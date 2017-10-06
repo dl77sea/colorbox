@@ -20,9 +20,9 @@
 
         <main>
           <div class="container">
-            <div id="boxgrid" class="row">
+
             <ui-view></ui-view>
-            </div>
+            
           </div>
         </main>
 

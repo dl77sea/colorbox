@@ -3,7 +3,6 @@
     .component('edit', {
       controller: controller,
       template: `
-      <div id="boxgrid" class="row">
         <div class="temp-display">
           <a ng-click="$ctrl.actionOrbit()">orbit view</a>
           <div class="canvas-style center-align">
@@ -11,7 +10,6 @@
             <a ng-click="$ctrl.actionSubmit()">submit</a>
           </div>
           <a ng-click="$ctrl.actionMove()">move faces</a>
-        </div>
         </div>
         `
     })
@@ -392,6 +390,7 @@
                     }
                   }
                 }
+
               });
               vm.box01.refreshBoundingInfo();
               vm.box01.updateVerticesData(BABYLON.VertexBuffer.PositionKind, vertices);
