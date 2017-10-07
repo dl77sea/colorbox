@@ -8,6 +8,15 @@ const boxesList = [
   //   created_at: new Date('2017-08-02 14:26:16 UTC'),
   //   updated_at: new Date('2017-08-02 14:26:16 UTC')
   // }
+  {
+    color: "a",
+  },
+  {
+    color: "b",
+  },
+  {
+    color: "c",
+  }
 ]
 
 exports.seed = function(knex, Promise) {
@@ -21,6 +30,6 @@ exports.seed = function(knex, Promise) {
     })
     .then(() => {
       //?
-    return knex.raw("SELECT setval('users_id_seq', (SELECT MAX(id) FROM boxes));")
+    return knex.raw("SELECT setval('boxes_id_seq', (SELECT MAX(id) FROM boxes));")
     });
 };

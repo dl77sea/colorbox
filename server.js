@@ -15,7 +15,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 //this is where the express/node stuff lives
 app.use(express.static(path.join(__dirname, '/../', 'node_modules')))
 
-app.use('/api/posts', require('./routes/posts'))
+app.use('/api/boxes', require('./routes/boxes'))
 
 app.use((req, res) => {
   res.sendStatus(404);

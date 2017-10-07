@@ -348,6 +348,7 @@
               // console.log("before rem am: ", vm.box01.actionManager.actions.OnPickTrigger)
 
               // console.log("after rem am: ", vm.box01.actionManager)
+              console.log(vm.box01._boundingInfo.boundingBox)
             } else {
 
               function difPoint(curPoint, prevPoint) {
