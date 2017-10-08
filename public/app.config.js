@@ -11,21 +11,21 @@
     $locationProvider.html5Mode(true)
 
     $stateProvider
-      .state({
-        name: 'nav',
-        abstract: true,
-        component: 'navbar',
-      })
+      // .state({
+      //   name: 'nav',
+      //   abstract: true,
+      //   component: 'navbar',
+      // })
       .state({
         name: 'posts',
         url: '/',
-        parent: 'nav',
+        // parent: 'nav',
         component: 'post'
       })
       .state({
         name: 'edit',
         url: '/edit',
-        parent: 'nav',
+        // parent: 'nav',
         component: 'edit'
       })
   }

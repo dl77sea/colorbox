@@ -1,8 +1,4 @@
-.ui-view-expander {
-   display: flex;
-   min-height: 100vh;
-   flex-direction: column;
- }
+
 .post-div {
   display: inline-block;
   /*background-color: red;*/

@@ -13,9 +13,11 @@
           <a ng-click="$ctrl.actionMove()">move faces</a>
         </div>
         </div>
+        <p>sdf<br><p>sdf<br><p>sdf<br><p>sdf<br><p>sdf<br><p>sdf<br><p>sdf<br>
+        <p>sdf<br><p>sdf<br><p>sdf<br><p>sdf<br><p>sdf<br><p>sdf<br><p>sdf<br>
         `
     })
-  // controller.$inject = ['$state', '$http', '$stateParams'];
+  // controller.$inject = ['ngMaterial'];
 
   // function controller($state, $http, $stateParams) {
   function controller() {

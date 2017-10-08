@@ -1,22 +1,26 @@
 (function() {
+  //module('myModule', ['hl.sticky']);
   angular.module('app')
     .component('post', {
       controller: controller,
       template: `
       <a ng-click="$ctrl.test()">posts</a>
-
       <div class="row">
+
         <div class="post-div col s2 m4 l4" ng-repeat="box in $ctrl.boxes">
-
-            <p>{{ box.color }}</p>
-            <canvas id={{box.id}} class="canvas-style" canvas-init></canvas>
-
+          <p>{{ box.color }}</p>
+          <canvas id={{box.id}} class="canvas-style" canvas-init></canvas>
         </div>
+
+        <a ui-sref="edit">create</a>
+        <p>sdf<br><p>sdf<br><p>sdf<br><p>sdf<br><p>sdf<br><p>sdf<br><p>sdf<br>
+        <p>sdf<br><p>sdf<br><p>sdf<br><p>sdf<br><p>sdf<br><p>sdf<br><p>sdf<br>
+
       </div>
-      <a ui-sref="edit">create</a>
       `
     })
   // controller.$inject = ['$state', '$http', '$stateParams'];
+  // controller.$inject = ['hl.sticky'];
 
   //this is used because it is called when the canvas is available in dom,
   //so then it becomes possible to call $ctrl.genBox(box, canvas),
@@ -39,24 +43,48 @@
           }
       }
   });
-
+  // controller.$inject = ['ngMaterial'];
   function controller($state, $http, $stateParams) {
   // function controller() {
     const vm = this
     console.log("navbar controller")
 
     vm.$onInit = function() {
-      // vm.boxes = [{color: "a"},{color: "b"},{color: "c"},{color: "d"},{color: "e"},{color: "f"},{color: "g"},{color: "h"},{color: "i"},{color: "j"},{color: "k"}]
+      vm.boxes = [
+        {color: "box01"},
+        {color: "box02"},
+        {color: "box03"},
+        {color: "box04"},
+        {color: "box05"},
+        {color: "box06"},
+        {color: "box07"},
+        {color: "box08"},
+        {color: "box09"},
+        {color: "box10"},
+        {color: "box11"},
+        {color: "box12"}
+        // {color: "box13"},
+        // {color: "box14"},
+        // {color: "box15"},
+        // {color: "box16"}
+        // {color: "box17"},
+        // {color: "box18"},
+        // {color: "box19"}
+        // {color: "box20"},
+        // {color: "box21"},
+        // {color: "box22"}
+      ]
       console.log("init navbar")
-      vm.canvi = [];
-      vm.getBoxes();
+
+      // vm.getBoxes();
       // console.log(document.getElementById("2"))
     };
 
+    vm.purgeBoxes = function() {
 
+    }
 
     vm.test = function() {
-
       console.log("snarfff")
     }
     //generate box from parameters from box description from database
@@ -66,24 +94,24 @@
       // console.log(currentCanvas)
       // console.log(document.getElementById("2"))
 
-      vm.canvas = canvas //document.getElementById("editCanvas");
+      let curCanvas = canvas //document.getElementById("editCanvas");
 
-      vm.engine = new BABYLON.Engine(vm.canvas, true);
+      let engine = new BABYLON.Engine(canvas, true);
 
-      vm.scene = new BABYLON.Scene(vm.engine);
+      let scene = new BABYLON.Scene(engine);
 
-      vm.scene.clearColor = new BABYLON.Color3(0, 1, 0);
+      scene.clearColor = new BABYLON.Color3(0, 1, 0);
 
-      vm.camera = new BABYLON.ArcRotateCamera("ArcRotateCamera", 1, 1, 120, new BABYLON.Vector3.Zero(), vm.scene);
-      vm.camera.setPosition(new BABYLON.Vector3(50, 50, -100));
+      let camera = new BABYLON.ArcRotateCamera("ArcRotateCamera", 1, 1, 120, new BABYLON.Vector3.Zero(), scene);
+      camera.setPosition(new BABYLON.Vector3(50, 50, -100));
       // camera.position.x = 0;
       // camera.position.z = 50;
       // camera.position.z = 0;
 
       // This attaches the camera to the canvas
-      vm.camera.attachControl(vm.canvas, false);
+      camera.attachControl(canvas, false);
 
-      var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(-50, 100, 0), vm.scene);
+      var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(-50, 100, 0), scene);
 
       light.intensity = 1.0;
 
@@ -100,25 +128,26 @@
         updatable: true
       };
 
-      vm.box01 = BABYLON.MeshBuilder.CreateBox("box01", boxOptions, vm.scene)
+      let box01 = BABYLON.MeshBuilder.CreateBox("box01", boxOptions, scene)
 
-      var materialSnarf = new BABYLON.StandardMaterial("snarf", vm.scene);
+      var materialSnarf = new BABYLON.StandardMaterial("snarf", scene);
 
       materialSnarf.diffuseColor = new BABYLON.Color3(1.0, 1.0, 1.0);
 
       materialSnarf.alpha = 0.5;
 
-      vm.box01.material = materialSnarf;
+      box01.material = materialSnarf;
 
-      vm.box01.position.x = 0;
-      vm.box01.position.y = 0;
-      vm.box01.position.z = 0;
+      box01.position.x = 0;
+      box01.position.y = 0;
+      box01.position.z = 0;
 
-
-      vm.engine.runRenderLoop(function() {
-        vm.scene.render();
+      engine.runRenderLoop(function() {
+        box01.rotation.x += .0025
+        box01.rotation.y += .0025
+        box01.rotation.z += .0025
+        scene.render();
       });
-
     }
 
     vm.getBoxes = function() {
