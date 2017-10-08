@@ -4,13 +4,13 @@
       controller: controller,
       template: `
       <div id="boxgrid" class="row">
-        <div class="temp-display">
-          <a ng-click="$ctrl.actionOrbit()">orbit view</a>
+        <div class="edit-canvas">
+          <a class="center-align" ng-click="$ctrl.actionOrbit()">orbit view</a>
           <div class="canvas-style center-align">
             <canvas class="canvas-style" id="editCanvas"></canvas>
             <a ng-click="$ctrl.actionSubmit()">submit</a>
           </div>
-          <a ng-click="$ctrl.actionMove()">move faces</a>
+          <a class="center-align" ng-click="$ctrl.actionMove()">move faces</a>
         </div>
         </div>
         <p>sdf<br><p>sdf<br><p>sdf<br><p>sdf<br><p>sdf<br><p>sdf<br><p>sdf<br>

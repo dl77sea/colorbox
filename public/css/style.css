@@ -8,6 +8,13 @@ body {
     flex: 1 0 auto;
   }
 
+.edit-canvas {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  align-content: center;
+}
 
 .footer-fixed {
     display: flex;
