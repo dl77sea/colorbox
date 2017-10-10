@@ -14,7 +14,7 @@
       </div>
       <a ui-sref="edit">create</a>
 
-      
+
       `
     })
   // controller.$inject = ['$state', '$http', '$stateParams'];
