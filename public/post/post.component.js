@@ -50,7 +50,7 @@
     vm.$onInit = function() {
 
       vm.allBoxes = [
-        /*
+
         {color: "box01"},
         {color: "box02"},
         {color: "box03"},
@@ -87,7 +87,7 @@
         {color: "box34"},
         {color: "box35"},
         {color: "box36"}
-        */
+
       ]
 
       // vm.getBoxes();
