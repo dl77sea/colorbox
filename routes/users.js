@@ -3,19 +3,14 @@ const jwt = require('jsonwebtoken');
 const router = express.Router()
 const knex = require('../db')
 const bcrypt = require('bcrypt-as-promised');
-console.log("this2 ", process.env.JWT_KEY)
-//verify user
-router.post('/', function(req, res, next) {
-  console.log("status: ", req.status)
 
-  // let hashedPassword = bcrypt.hash(req.body.password, 12)
+//sign in user
+router.post('/signin', function(req, res, next) {
+  console.log("status: ", req.status)
 
   knex('users')
     .where('email', req.body.email)
     .then(function(user) {
-      console.log("user: ", user[0])
-      // console.log("hp: ", user[0].hashed_password)
-      console.log("wbpw: ", req.body.password)
       //if email existed in db
       if (user.length !== 0) {
 
@@ -50,18 +45,56 @@ router.post('/', function(req, res, next) {
             next(res)
           });
       } else {
-        console.log("bad email")
+        console.log("email does not exist")
         //bad email
         res.status(401);
         throw new Error()
       }
     })
     .catch(function(result) {
-      console.log("catch (bad email)")
-
       next(result) //this will look for server middleware with four params (req, res, err, next)
     })
 })
+
+//sign up user
+router.post('/signup', function(req, res, next) {
+  console.log("status: ", req.status)
+
+  knex('users')
+    .where('email', req.body.email)
+    .then(function(user) {
+      //if email does not exist in db
+      if (user.length === 0) {
+        //generate password hash for this user
+        bcrypt.hash(req.body.password, 12)
+          .then(function(retHashed_password) {
+            knex('users')
+              .insert({
+                email: req.body.email,
+                hashed_password: retHashed_password,
+              })
+              .then(function() {
+                res.send({
+                  user: req.body.email,
+                  id: user.id
+                })
+              })
+          })
+          .catch(function(err) {
+            next(err);
+          })
+      } else {
+        console.log("email already exists")
+        //bad email
+        res.status(401);
+        throw new Error()
+      }
+    })
+    .catch(function(err) {
+      next(err)
+    })
+});
+
 
 module.exports = router
 

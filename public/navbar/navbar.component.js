@@ -27,7 +27,7 @@
       </main>
 
       <!-- <footer class="page-footer"> -->
-      <footer class="page-footer">
+      <footer class="page-footer footer-fixed">
         <div class="footer-fixed">
           <div class="footer-copyright">
             <div class="container">
@@ -38,12 +38,11 @@
         </div>
       </footer>
 
-
-
  <!-- Sign in Modal -->
  <div id="modal-signin" class="modal">
    <div class="modal-content">
-     <h4>Sign In</h4>
+     <h4 ng-if="$ctrl.formMode=='signin'">Sign In</h4>
+     <h4 ng-if="$ctrl.formMode=='signup'">Sign Up</h4>
      <div class="container">
   <div class="row">
 
@@ -107,19 +106,48 @@
         password: vm.password
       }
 
+      if(vm.formMode === "signin") {
+        vm.formSubmitSignin(data);
+      }
+
+      if(vm.formMode === "signup") {
+        vm.formSubmitSignup(data);
+      }
+    }
+
+    vm.formSubmitSignin = function (data) {
       //verify submitted login
-      $http.post('/api/users/', data)
+      $http.post('/api/users/signin', data)
         //200s go here
         .then(function success(response) {
-          console.log("formSubmit success")
+          console.log("form signin success")
         })
         //others go here
         .catch(function error(response) {
-          console.log("formSubmit fail")
+          console.log("form signin fail")
           //status code in response.status
           //status message in response.data
         })
     }
+
+    vm.formSubmitSignup = function (data) {
+      //verify submitted login
+      $http.post('/api/users/signup', data)
+        //200s go here
+        .then(function success(response) {
+          console.log("form signup success")
+          console.log(response)
+        })
+        //others go here
+        .catch(function error(response) {
+          console.log("form signup fail")
+          console.log(response)
+          //status code in response.status
+          //status message in response.data
+        })
+    }
+
+
   }
 
 }());
