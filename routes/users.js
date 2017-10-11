@@ -3,6 +3,26 @@ const jwt = require('jsonwebtoken');
 const router = express.Router()
 const knex = require('../db')
 const bcrypt = require('bcrypt-as-promised');
+// const { camelizeKeys } = require('humps');
+
+const authorize = function(req, res, next) {
+  console.log("authorize")
+  console.log(req.cookies) //[function]
+  // console.log("this2 ", process.env.JWT_KEY)
+  // if (req.cookie) {
+  jwt.verify(req.cookies.token, process.env.JWT_KEY, function(err, payload) {
+    console.log("authorize jwt.verify")
+    if (err) {
+      console.log("authorize error: ")
+      res.status(401)
+      return new Error(); //exit jwt.verify block...
+    }
+    console.log("does this enter on error? (only on success i think)")
+    req.claim = payload; //what is this for?
+
+    next(); //proceed to callback of router.get('/auth'...
+  });
+};
 
 //sign in user
 router.post('/signin', function(req, res, next) {
@@ -13,7 +33,8 @@ router.post('/signin', function(req, res, next) {
     .then(function(user) {
       //if email existed in db
       if (user.length !== 0) {
-
+        // let user = camelizeKeys(row);
+        console.log(user[0].hashed_password)
         bcrypt.compare(req.body.password, user[0].hashed_password)
           .then(function() {
             // verified email to hashed password so:
@@ -31,6 +52,7 @@ router.post('/signin', function(req, res, next) {
             res.cookie('token', token, {
               httpOnly: true,
               expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7) // 7 days
+              // secure: router.get('env') === 'production' //?
             });
 
             // remove hashed password before we send back the response.
@@ -95,6 +117,43 @@ router.post('/signup', function(req, res, next) {
     })
 });
 
+//check if user has a valid jwt
+// router.get('/auth', authorize, (req, res, next) => {
+//   console.log("entered /auth")
+//   //return to front end /auth call promise, to enter then or catch based on res status
+//   res.send(result)
+// });
+
+// router.get('/auth', (req, res, next) => {
+//   console.log("auth")
+//   jwt.verify(req.cookies.token, process.env.JWT_KEY, (err, payload) => {
+//     if (err) {
+//       console.log("auth ok")
+//       // return res.send({
+//       //   result: false
+//       // });
+//     }
+//     console.log("auth fail")
+//     // return res.send({
+//     //   result: true,
+//     //   userId: payload.userId
+//     // });
+//   });
+// });
+
+router.get('/auth', (req, res) => {
+  jwt.verify(req.cookies.token, process.env.JWT_KEY, (err, _payload) => {
+    console.log("entered jwt.verify")
+    if (err) {
+      console.log("jwt.verify err")
+      res.statusCode=401
+      res.send(err);
+    } else {
+      console.log("jwt.verify true")
+      res.send(response);
+    }
+  });
+});
 
 module.exports = router
 
