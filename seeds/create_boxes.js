@@ -9,13 +9,19 @@ const boxesList = [
   //   updated_at: new Date('2017-08-02 14:26:16 UTC')
   // }
   {
-    color: "a",
+    width: 25,
+    height: 25,
+    depth: 25
   },
   {
-    color: "b",
+    width: 25,
+    height: 25,
+    depth: 25
   },
   {
-    color: "c",
+    width: 25,
+    height: 25,
+    depth: 25
   }
 ]
 

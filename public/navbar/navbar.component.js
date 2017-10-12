@@ -2,8 +2,7 @@
   angular.module('app')
     .component('navbar', {
       controller: controller,
-      template:
-      `
+      template: `
       <header>
         <div class="navbar-fixed">
           <nav>
@@ -67,8 +66,17 @@
     console.log("navbar controller: ", authService)
 
     //check if user logged in (token valid)
-    vm.formMode = "signin"
-    vm.loginMode = "signedout"
+    $http.get('/api/users/auth')
+      .then(function(response) {
+        console.log("auth success")
+        vm.loginMode = "signedin"
+      })
+      .catch(function(response) {
+        console.log("auth fail")
+        console.log(response)
+        vm.loginMode = "signedout"
+        vm.formMode = "signin"
+      })
 
     vm.email = null;
     vm.password = null;
@@ -80,7 +88,7 @@
     vm.signOut = function() {
       console.log("sign out")
       $http.delete('/api/users/auth')
-        .then(function(response){
+        .then(function(response) {
           vm.formMode = "signin"
           vm.loginMode = "signedout"
           console.log("signed out success")
@@ -105,9 +113,6 @@
           console.log("auth error")
         })
     }
-
-
-
 
   }
 

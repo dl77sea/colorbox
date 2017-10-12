@@ -7,7 +7,8 @@
       <a ng-click="$ctrl.test()">posts</a>
       <div id="boxes" class="row">
         <div class="post-div col s2 m4 l4" ng-repeat="box in $ctrl.curBoxes">
-          <p>{{ box.color }}</p>
+          <!-- <p>{{ box.color }}</p> -->
+          <p>color</p>
           <canvas id={{box.id}} class="canvas-style" canvas-init></canvas>
         </div>
       </div>
@@ -51,34 +52,35 @@
 
     vm.$onInit = function() {
 
-      vm.curBoxes = [
-
-        {
-          color: "box01"
-        },
-        {
-          color: "box02"
-        },
-        {
-          color: "box03"
-        },
-        {
-          color: "box04"
-        },
-        {
-          color: "box05"
-        },
-        {
-          color: "box06"
-        }
-      ]
+      // vm.curBoxes = [
+      //
+      //   {
+      //     color: "box01"
+      //   },
+      //   {
+      //     color: "box02"
+      //   },
+      //   {
+      //     color: "box03"
+      //   },
+      //   {
+      //     color: "box04"
+      //   },
+      //   {
+      //     color: "box05"
+      //   },
+      //   {
+      //     color: "box06"
+      //   }
+      // ]
+      vm.getBoxes()
     }
 
     vm.formSubmit = function() {
       console.log("formSubmit from post")
       authService.formSubmit(vm.email, vm.password, vm.formMode)
         .then(function(response) {
-          if(response.success === true) {
+          if (response.success === true) {
             vm.formMode = response.formMode;
             vm.loginMode = response.loginMode;
           }
@@ -151,18 +153,17 @@
         scene.render();
       });
     }
-    /*
-            vm.getBoxes = function() {
-              //load up all the boxes to front end but do not render them.
-              //rendering will be front-end paginated
-              // (todo: paginate this load)
 
-              //request this endpoint from server.js
-              $http.get('/api/boxes').then(function(response) {
-                vm.curBoxes = response.data;
-              })
-            }
-    */
+    vm.getBoxes = function() {
+      //load up all the boxes to front end but do not render them.
+      //rendering will be front-end paginated
+      // (todo: paginate this load)
+
+      //request this endpoint from server.js
+      $http.get('/api/boxes').then(function(response) {
+        vm.curBoxes = response.data;
+      })
+    }
 
     vm.launchEditor = function() {
       //check if user is logged in

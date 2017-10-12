@@ -13,18 +13,15 @@
           <a class="center-align" ng-click="$ctrl.actionMove()">move faces</a>
         </div>
         </div>
-        <p>sdf<br><p>sdf<br><p>sdf<br><p>sdf<br><p>sdf<br><p>sdf<br><p>sdf<br>
-        <p>sdf<br><p>sdf<br><p>sdf<br><p>sdf<br><p>sdf<br><p>sdf<br><p>sdf<br>
         `
     })
   // controller.$inject = ['ngMaterial'];
 
   // function controller($state, $http, $stateParams) {
-  function controller() {
+  controller.$inject = ['$http'];
+  function controller($http) {
     const vm = this
     console.log("controller")
-
-
 
     vm.$onInit = function() {
       console.log("inited")
@@ -427,7 +424,30 @@
     }
 
     vm.actionSubmit = function() {
-      console.log(vm.box)
+      console.log(vm.box01._boundingInfo.boundingBox.minimum)
+      console.log(vm.box01._boundingInfo.boundingBox.maximum)
+
+      //use boxe's bounding box to get w,h,d size of new box
+      let newBoxMin = vm.box01._boundingInfo.boundingBox.minimum;
+      let newBoxMax = vm.box01._boundingInfo.boundingBox.minimum;
+
+      let newBox = {
+        width:  Math.abs(newBoxMin.x)+Math.abs(newBoxMax.x),
+        height: Math.abs(newBoxMin.y)+Math.abs(newBoxMax.y),
+        depth:  Math.abs(newBoxMin.z)+Math.abs(newBoxMax.z)
+      }
+
+      console.log(newBox)
+
+      //second param is request body
+      $http.post('/api/boxes/', newBox)
+        .then(function(response) {
+          console.log("box insert success")
+        })
+        .catch(function(response) {
+          console.log("box insert fail: ", response)
+        })
+
     }
   }
 }());
