@@ -6,6 +6,11 @@ exports.up = function(knex, Promise) {
     table.float('width').notNullable();
     table.float('height').notNullable();
     table.float('depth').notNullable();
+    table.integer('user_id')
+      .references('id')
+      .inTable('users')
+      .onDelete('CASCADE')
+      .index();
   })
 };
 
