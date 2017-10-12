@@ -53,7 +53,6 @@
             // the "href" attribute of the modal trigger must specify the modal ID that wants to be triggered
             $('.modal').modal();
           });
-
         }
       }
     });
@@ -65,24 +64,24 @@
     const vm = this
     console.log("navbar controller: ", authService)
 
-    //check if user logged in (token valid)
-    $http.get('/api/users/auth')
-      .then(function(response) {
-        console.log("auth success")
-        vm.loginMode = "signedin"
-      })
-      .catch(function(response) {
-        console.log("auth fail")
-        console.log(response)
-        vm.loginMode = "signedout"
-        vm.formMode = "signin"
-      })
-
     vm.email = null;
     vm.password = null;
 
     vm.$onInit = function() {
       console.log("init navbar")
+
+      //check if user logged in (token valid) might not need to leave this in navbar?
+      $http.get('/api/users/auth')
+        .then(function(response) {
+          console.log("auth success", response)
+          vm.loginMode = "signedin"
+        })
+        .catch(function(response) {
+          console.log("auth fail")
+          console.log(response)
+          vm.loginMode = "signedout"
+          vm.formMode = "signin"
+        })
     }
 
     vm.signOut = function() {

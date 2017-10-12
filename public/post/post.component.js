@@ -92,7 +92,7 @@
 
     //generate box from parameters from box description from database
     vm.genBox = function(box, canvas) {
-      // console.log("cur box", box)
+      console.log("cur box", box)
       // console.log("cur canv: ", canvas)
       // let currentCanvas = (box.id).toString();
       // console.log(currentCanvas)
@@ -121,9 +121,9 @@
 
       var boxOptions = {
         // size: number,
-        width: 25,
-        height: 25,
-        depth: 25,
+        width: box.width,
+        height: box.height,
+        depth: box.depth,
         // faceUV: Vector4[],
         // faceColors: Color4[],
         // sideOrientation: number,

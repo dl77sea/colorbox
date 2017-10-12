@@ -35,9 +35,31 @@
   authService.$inject = ['$http'];
   function authService($http) {
     const vm = this;
+
+    console.log("authService entered")
+
     // vm.formMode = "signin"
-    vm.email = null;
+    vm.username = null;
     vm.password = null;
+
+    //gets set from two possible sources:
+    //  1) formSubmitSignin response: (typically, when user comes to site, signed out)
+    //  2) usrs /auth route, when user comes to site signed in
+    //check if user logged in (token valid)
+    vm.username = null;
+    $http.get('/api/users/auth')
+      .then(function(response) {
+        console.log("authService success: ", response.data)
+        // vm.loginMode = "signedin"
+        vm.username = response.data;
+      })
+      .catch(function(response) {
+        console.log("auth fail")
+        console.log(response)
+        vm.loginMode = "signedout"
+        vm.formMode = "signin"
+      })
+
 
     vm.formSubmit = function(email, password, formMode) {
       console.log("formSubmit")
@@ -64,7 +86,9 @@
       return $http.post('/api/users/signin', data)
         //200s go here
         .then(function success(response) {
-          console.log("form signin success")
+          console.log("form signin success", response)
+          vm.username = response.email;
+          console.log("authService formSubmitSignin:", response.email)
           $('#modal-auth').modal('close');
           return {success: true, formMode: 'signin', loginMode: 'signedin'}
         })

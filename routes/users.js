@@ -38,11 +38,12 @@ router.post('/signin', function(req, res, next) {
         bcrypt.compare(req.body.password, user[0].hashed_password)
           .then(function() {
             // verified email to hashed password so:
-            console.log("ok email")
+            console.log("ok email", user)
 
             // issue this user a JWT
             const claim = {
-              id: user[0].id
+              id: user[0].id,
+              username: user[0].email
             };
             const token = jwt.sign(claim, process.env.JWT_KEY, { //???
               expiresIn: '7 days'
@@ -58,7 +59,9 @@ router.post('/signin', function(req, res, next) {
             // remove hashed password before we send back the response.
             delete user[0].hashed_password;
 
-            res.send(user); //auto sets to 200
+            //return username to authservice to populate username field
+            //  verify this is ok security practice (is there relatively good way to keep username on backend only?)
+            res.send(user[0].email); //auto sets to 200
           })
           .catch(function() {
             console.log("bad password")
@@ -96,10 +99,7 @@ router.post('/signup', function(req, res, next) {
                 hashed_password: retHashed_password,
               })
               .then(function() {
-                res.send({
-                  user: req.body.email,
-                  id: user.id
-                })
+                res.send(true)
               })
           })
           .catch(function(err) {
@@ -150,7 +150,10 @@ router.get('/auth', (req, res) => {
       res.send(err);
     } else {
       console.log("jwt.verify true")
-      res.send(response);
+      console.log("/auth response: ", _payload)
+
+      //send username back to authService to populate userame field
+      res.send(_payload.username);
     }
   });
 });

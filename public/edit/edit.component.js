@@ -15,14 +15,14 @@
         </div>
         `
     })
-  // controller.$inject = ['ngMaterial'];
+
 
   // function controller($state, $http, $stateParams) {
-  controller.$inject = ['$http'];
-  function controller($http) {
+  controller.$inject = ['$http', 'authService'];
+  function controller($http, authService) {
     const vm = this
     console.log("controller")
-
+    // return authService.username;
     vm.$onInit = function() {
       console.log("inited")
 
@@ -56,7 +56,7 @@
         // size: number,
         width: 25,
         height: 25,
-        depth: 25,
+        depth: 50,
         // faceUV: Vector4[],
         // faceColors: Color4[],
         // sideOrientation: number,
@@ -424,6 +424,7 @@
     }
 
     vm.actionSubmit = function() {
+      console.log("actionSubmit: ", authService.username)
       console.log(vm.box01._boundingInfo.boundingBox.minimum)
       console.log(vm.box01._boundingInfo.boundingBox.maximum)
 
