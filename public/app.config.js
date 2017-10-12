@@ -39,9 +39,29 @@
     vm.email = null;
     vm.password = null;
 
+    vm.formSubmit = function(email, password, formMode) {
+      console.log("formSubmit")
+      vm.formMode=formMode
+
+      let data = {
+        email: email,
+        password: password
+      }
+
+      if (formMode === "signin") {
+        //needs to return even though sign in returns no values, just to conform to promise in component that needs val returned from signup
+        return vm.formSubmitSignin(data);
+      }
+
+      if (formMode === "signup") {
+        //this one is returned bc return val to component controller method determines ng-if visability.
+        return vm.formSubmitSignup(data);
+      }
+    }
+
     vm.formSubmitSignin = function(data) {
       //verify submitted login
-      $http.post('/api/users/signin', data)
+      return $http.post('/api/users/signin', data)
         //200s go here
         .then(function success(response) {
           console.log("form signin success")
@@ -56,27 +76,8 @@
         })
     }
 
-    vm.formSubmit = function(email, password, formMode) {
-      console.log("formSubmit")
-      vm.formMode=formMode
-
-      let data = {
-        email: email,
-        password: password
-      }
-
-      if (formMode === "signin") {
-        vm.formSubmitSignin(data);
-      }
-
-      if (formMode === "signup") {
-        vm.formSubmitSignup(data);
-      }
-    }
-
     vm.formSubmitSignup = function(data) {
       //verify submitted login
-      console.log("formSubmitSignup")
       return $http.post('/api/users/signup', data)
         //200s go here
         .then(function success(response) {
@@ -95,28 +96,6 @@
           //status message in response.data
         })
     }
-
-    return new Promise(function(success, fail) {
-      $http.post('/api/users/signup', data)
-        //200s go here
-        .then(function success(response) {
-          console.log("form signup success")
-          console.log(response.data)
-          console.log(vm.formMode)
-          return success(...); // vm.formMode = "signin"
-        })
-        //others go here
-        .catch(function error(response) {
-          console.log("form signup fail")
-          console.log(response)
-          alert(response.data) //replace with modal expandable
-          return false;
-          //status code in response.status
-          //status message in response.data
-        })
-    })
-
-
   };
 
 

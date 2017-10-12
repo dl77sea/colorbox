@@ -37,10 +37,26 @@
           </div>
         </div>
       </footer>
-      <ng-include src="'./modals/auth.template.html'"></ng-include>
-
+      <ng-include src="'./modals/auth.template.html'" modal-init></ng-include>
       `
     })
+    .directive('modalInit', function() {
+      return {
+        link: function($scope, element, attrs) {
+          // let canvas = element[0];
+          //
+          // $scope.$parent.$ctrl.genBox($scope.box, canvas)
+
+          //needed for materialize modal stuff to work
+          $(document).ready(function() {
+            // the "href" attribute of the modal trigger must specify the modal ID that wants to be triggered
+            $('.modal').modal();
+          });
+
+        }
+      }
+    });
+
   controller.$inject = ['authService'];
   // function controller($state, $http, $stateParams) {
   function controller($state, $http, $stateParams) {
@@ -54,9 +70,7 @@
         // the "href" attribute of the modal trigger must specify the modal ID that wants to be triggered
         $('.modal').modal();
       });
-
     }
-
   }
-
+  
 }());
