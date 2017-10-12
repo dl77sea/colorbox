@@ -12,7 +12,6 @@
         </div>
       </div>
       <a ng-click="$ctrl.launchEditor()">create</a>
-      <ng-include src="'./modals/auth.template.html'" modal-init></ng-include>
       `
     })
 
@@ -43,6 +42,7 @@
     const vm = this
     // vm.formMode = authService.formMode;
     vm.formMode = "signin"
+    vm.loginMode = "siginedout"
 
     vm.email = null;
     vm.password = null;
@@ -75,10 +75,13 @@
     }
 
     vm.formSubmit = function() {
+      console.log("formSubmit from post")
       authService.formSubmit(vm.email, vm.password, vm.formMode)
         .then(function(response) {
-          vm.formMode = response ? 'signin' : 'signup'
-          console.log("check1")
+          if(response.success === true) {
+            vm.formMode = response.formMode;
+            vm.loginMode = response.loginMode;
+          }
         })
         .catch(function(response) {
           console.log("signup error")
@@ -171,7 +174,7 @@
         .catch(function(response) {
           console.log("auth err")
           console.log(response)
-          $('#modal-signinup').modal('open')
+          $('#modal-auth').modal('open')
         })
     }
   }

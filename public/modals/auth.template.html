@@ -1,5 +1,5 @@
 <!-- Sign in Modal -->
-<div id="modal-signinup" class="modal">
+<div id="modal-auth" class="modal">
   <div class="modal-content">
     <h4 ng-if="$ctrl.formMode=='signin'">Sign In</h4>
     <h4 ng-if="$ctrl.formMode=='signup'">Sign Up</h4>
@@ -7,6 +7,7 @@
  <div class="row">
 
    <form ng-submit="$ctrl.formSubmit($ctrl.email, $ctrl.password, $ctrl.formMode)" id="signin-form" class="col s12">
+   
 
      <div class="row">
        <div class="col s12"></div>

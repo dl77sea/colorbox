@@ -2,7 +2,8 @@
   angular.module('app')
     .component('navbar', {
       controller: controller,
-      template: `
+      template:
+      `
       <header>
         <div class="navbar-fixed">
           <nav>
@@ -10,7 +11,8 @@
               <a ui-sref="posts" class="brand-logo">Logo</a>
               <ul id="nav-mobile" class="right hide-on-med-and-down">
                 <li>
-                  <a class="modal-trigger" href="#modal-signinup">Sign in</a>
+                  <a ng-if="$ctrl.loginMode=='signedout'" class="modal-trigger" href="#modal-auth">Sign in</a>
+                  <a ng-if="$ctrl.loginMode=='signedin'" ng-click="$ctrl.signOut()">Sign out</a>
                 </li>
               </ul>
             </div>
@@ -57,20 +59,56 @@
       }
     });
 
-  controller.$inject = ['authService'];
-  // function controller($state, $http, $stateParams) {
-  function controller($state, $http, $stateParams) {
+  controller.$inject = ['$state', '$http', 'authService'];
+
+  function controller($state, $http, authService) {
+
     const vm = this
-    console.log("navbar controller")
+    console.log("navbar controller: ", authService)
+
+    //check if user logged in (token valid)
+    vm.formMode = "signin"
+    vm.loginMode = "signedout"
+
+    vm.email = null;
+    vm.password = null;
 
     vm.$onInit = function() {
       console.log("init navbar")
-      //needed for materialize modal stuff to work
-      $(document).ready(function() {
-        // the "href" attribute of the modal trigger must specify the modal ID that wants to be triggered
-        $('.modal').modal();
-      });
     }
+
+    vm.signOut = function() {
+      console.log("sign out")
+      $http.delete('/api/users/auth')
+        .then(function(response){
+          vm.formMode = "signin"
+          vm.loginMode = "signedout"
+          console.log("signed out success")
+        })
+        .catch(function(response) {
+          alert(response.data)
+        })
+    }
+
+    vm.formSubmit = function() {
+      console.log("enter navbar formSubmit")
+      authService.formSubmit(vm.email, vm.password, vm.formMode)
+        .then(function(response) {
+          if (response.success === true) {
+            console.log("enter navbar formSubmit success")
+            console.log(response)
+            vm.formMode = response.formMode;
+            vm.loginMode = response.loginMode;
+          }
+        })
+        .catch(function(response) {
+          console.log("auth error")
+        })
+    }
+
+
+
+
   }
-  
+
 }());

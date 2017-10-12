@@ -155,6 +155,15 @@ router.get('/auth', (req, res) => {
   });
 });
 
+//clear cookie (sign out user)
+//no promises on these??
+router.delete('/auth', (req, res) => {
+  res.clearCookie('token');
+  res.end()
+  console.log("ok")
+  // res.send(response)
+});
+
 module.exports = router
 
 /*

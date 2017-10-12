@@ -65,7 +65,8 @@
         //200s go here
         .then(function success(response) {
           console.log("form signin success")
-          $('#modal-signinup').modal('close');
+          $('#modal-auth').modal('close');
+          return {success: true, formMode: 'signin', loginMode: 'signedin'}
         })
         //others go here
         .catch(function error(response) {
@@ -84,7 +85,7 @@
           console.log("form signup success")
           console.log(response.data)
           console.log(vm.formMode)
-          return true; // vm.formMode = "signin"
+          return {success: true, formMode: 'signin', loginMode: 'signedout'}; // vm.formMode = "signin"
         })
         //others go here
         .catch(function error(response) {
