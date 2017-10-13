@@ -16,15 +16,32 @@
         `
     })
 
-
   // function controller($state, $http, $stateParams) {
-  controller.$inject = ['$http', 'authService'];
-  function controller($http, authService) {
+  controller.$inject = ['$state', '$http', 'authService', 'updateService'];
+
+  function controller($state, $http, authService, updateService) {
     const vm = this
+
     console.log("controller")
     // return authService.username;
     vm.$onInit = function() {
       console.log("inited")
+
+      console.log()
+
+      if (updateService.box !== null) {
+        vm.genBox(updateService.box)
+      } else {
+        vm.genBox({
+          width: 25,
+          height: 25,
+          depth: 25
+        })
+      }
+
+    }
+
+    vm.genBox = function(box) {
 
       vm.canvas = document.getElementById("editCanvas");
       console.log(vm.canvas)
@@ -54,9 +71,9 @@
 
       var boxOptions = {
         // size: number,
-        width: 25,
-        height: 25,
-        depth: 50,
+        width: box.width,
+        height: box.height,
+        depth: box.depth,
         // faceUV: Vector4[],
         // faceColors: Color4[],
         // sideOrientation: number,
@@ -112,7 +129,10 @@
       });
 
       //this is the description of the box that gets submitted to database
-      vm.box = {a:"snarf"};
+      vm.box = {
+        a: "snarf"
+      };
+
     }
 
     vm.actionMove = function() {
@@ -214,7 +234,7 @@
         function(event) {
           //get location clicked on, so we know where to create helper plane
           let pickedObj = vm.scene.pick(event.pointerX, event.pointerY);
-          let v3PickedNormal = vm.scene.pick(event.pointerX, event.pointerY).getNormal()
+          let v3PickedNormal = vm.scene.pick(event.pointerX, event.pointerY).getNormal();
           let v3PickedWorldCoord = vm.scene.pick(event.pointerX, event.pointerY).pickedPoint;
           console.log("check this: ", v3PickedWorldCoord)
           let prevPickedPoint = v3PickedWorldCoord;
@@ -433,9 +453,9 @@
       let newBoxMax = vm.box01._boundingInfo.boundingBox.minimum;
 
       let newBox = {
-        width:  Math.abs(newBoxMin.x)+Math.abs(newBoxMax.x),
-        height: Math.abs(newBoxMin.y)+Math.abs(newBoxMax.y),
-        depth:  Math.abs(newBoxMin.z)+Math.abs(newBoxMax.z)
+        width: Math.abs(newBoxMin.x) + Math.abs(newBoxMax.x),
+        height: Math.abs(newBoxMin.y) + Math.abs(newBoxMax.y),
+        depth: Math.abs(newBoxMin.z) + Math.abs(newBoxMax.z)
       }
 
       console.log(newBox)
@@ -444,11 +464,11 @@
       $http.post('/api/boxes/', newBox)
         .then(function(response) {
           console.log("box insert success")
+          $state.go('posts')
         })
         .catch(function(response) {
           console.log("box insert fail: ", response)
         })
-
     }
   }
 }());

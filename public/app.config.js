@@ -3,6 +3,7 @@
   console.log('Hello config iffe');
   angular.module('app').config(config)
     .service('authService', authService)
+    .service('updateService', updateService)
 
   config.$inject = ['$stateProvider', '$urlRouterProvider', '$locationProvider']
 
@@ -30,6 +31,13 @@
         parent: 'nav',
         component: 'edit'
       })
+  }
+
+  function updateService() {
+    const vm = this;
+    console.log("updateService entered")
+    // this value assigned from post component, selected box to edit
+    vm.box = null;
   }
 
   authService.$inject = ['$http'];

@@ -4,14 +4,22 @@
     .component('post', {
       controller: controller,
       template: `
-      <a ng-click="$ctrl.test()">posts</a>
+      <br></br>
       <div id="boxes" class="row">
         <div class="post-div col s2 m4 l4" ng-repeat="box in $ctrl.curBoxes">
           <!-- <p>{{ box.color }}</p> -->
-          <p>color</p>
+            <div style="width: 100%">
+              <p style="display: inline-block; margin: 0px">{{ box.email }}</p>
+              <div style="float: right" ng-if="box.self == true">
+                <a ng-click="$ctrl.update(box)" style="display: inline-block">edit</a>
+                <a ng-click="$ctrl.delete(box)" style="display: inline-block">delete</a>
+              </div>
+            </div>
+
           <canvas id={{box.id}} class="canvas-style" canvas-init></canvas>
         </div>
       </div>
+
       <a ng-click="$ctrl.launchEditor()">create</a>
       `
     })
@@ -36,9 +44,9 @@
       }
     });
 
-  controller.$inject = ['$state', '$http', 'authService'];
+  controller.$inject = ['$state', '$http', 'authService', 'updateService'];
 
-  function controller($state, $http, authService) {
+  function controller($state, $http, authService, updateService) {
     // function controller() {
     const vm = this
     // vm.formMode = authService.formMode;
@@ -178,5 +186,16 @@
           $('#modal-auth').modal('open')
         })
     }
+
+    vm.update = function(box) {
+      console.log("entered post update")
+      updateService.box = box
+      $state.go('edit')
+    }
+
+    vm.delete = function(box) {
+
+    }
+
   }
 }());

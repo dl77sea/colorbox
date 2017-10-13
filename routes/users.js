@@ -25,7 +25,7 @@ const authorize = function(req, res, next) {
 };
 
 //sign in user
-router.post('/signin', function(req, res, next) {
+router.post('/signin', function(req, res, next) { //where do req, res, next come from
   console.log("status: ", req.status)
 
   knex('users')
@@ -49,7 +49,7 @@ router.post('/signin', function(req, res, next) {
               expiresIn: '7 days'
             });
 
-            // add a cookie to the response
+            // add a cookie to the response -what does this do?
             res.cookie('token', token, {
               httpOnly: true,
               expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7) // 7 days
