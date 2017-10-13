@@ -5,6 +5,12 @@ module.exports = {
     connection: {
       database: process.env.DATABASE_URL || 'colorbox_dev',
     }
+  },
+  production: {
+    client: 'pg',
+    connection: {
+      database: process.env.DATABASE_URL,
+    }
   }
 };
 

@@ -24,5 +24,18 @@
     "knex": "^0.13.0",
     "nodemon": "^1.12.1",
     "pg": "^7.3.0"
+  },
+  "engines": {
+    "node": "8.2.1"
+  },
+  "devDependencies": {
+    "foreman": "^2.0.0"
+  },
+  "scripts": {
+    "knex": "knex",
+    "heroku-postbuild": "knex migrate:latest",
+    "nf": "nf start",
+    "nodemon": "nodemon server.js"
   }
+
 }
