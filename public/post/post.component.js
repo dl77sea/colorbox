@@ -4,23 +4,51 @@
     .component('post', {
       controller: controller,
       template: `
-      <br></br>
-      <div id="boxes" class="row">
-        <div class="post-div col s2 m4 l4" ng-repeat="box in $ctrl.curBoxes">
-          <!-- <p>{{ box.color }}</p> -->
-            <div style="width: 100%">
-              <p style="display: inline-block; margin: 0px">{{ box.email }}</p>
+      <div id="boxes" class="row row-mod">
+        <div class="entry-container col s2 m4 l4" ng-repeat="box in $ctrl.curBoxes">
+
+          <canvas id={{box.id}} class="canvas-style" canvas-init></canvas>
+            <div style="width: 100%; line-height: 0">
+              <p style="display: inline-block; margin: 0">{{ box.email }}</p>
               <div style="float: right" ng-if="box.self == true">
                 <a ng-click="$ctrl.update(box)" style="display: inline-block">edit</a>
                 <a ng-click="$ctrl.delete(box)" style="display: inline-block">delete</a>
               </div>
             </div>
 
-          <canvas id={{box.id}} class="canvas-style" canvas-init></canvas>
+
         </div>
+
       </div>
 
-      <a ng-click="$ctrl.launchEditor()">create</a>
+      <!-- <footer class="page-footer footer-fixed">-->
+      <!-- <div class="footer-fixed"> -->
+
+      <div class="page-container">
+      <button ng-click="$ctrl.launchEditor()" class="btn waves-effect waves-light" type="submit" name="action">Add a box!
+      <!-- <i class="material-icons right">send</i> -->
+      </button>
+      </div>
+
+
+      <div class="page-container">
+        <ul class="pagination">
+          <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
+          <li class="active"><a href="#!">1</a></li>
+          <li class="waves-effect"><a href="#!">2</a></li>
+          <li class="waves-effect"><a href="#!">3</a></li>
+          <li class="waves-effect"><a href="#!">4</a></li>
+          <li class="waves-effect"><a href="#!">5</a></li>
+          <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+        </ul>
+      </div>
+
+
+
+
+
+
+
       `
     })
 
@@ -49,7 +77,10 @@
   function controller($state, $http, authService, updateService) {
     // function controller() {
     const vm = this
-    // vm.formMode = authService.formMode;
+
+    //this value is used by edit.component.js to determine if a box is being updated or created new
+    updateService.box = null;
+
     vm.formMode = "signin"
     vm.loginMode = "siginedout"
 
@@ -170,6 +201,7 @@
       //request this endpoint from server.js
       $http.get('/api/boxes').then(function(response) {
         vm.curBoxes = response.data;
+        console.log("curBoxes: ", vm.curBoxes)
       })
     }
 
@@ -188,13 +220,20 @@
     }
 
     vm.update = function(box) {
-      console.log("entered post update")
+      console.log("entered post update", box)
       updateService.box = box
       $state.go('edit')
     }
-
+    //$http.patch('/api/boxes/' + updateService.box.id, newBox)
     vm.delete = function(box) {
-
+      console.log("enter post delete")
+      $http.delete('/api/boxes/'+box.id)
+        .then(function() {
+          vm.getBoxes()
+        })
+        .catch(function() {
+          console.log("post.component.js get fail")
+        })
     }
 
   }

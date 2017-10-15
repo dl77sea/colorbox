@@ -34,8 +34,7 @@ const softAuthorize = function(req, res, next) {
     if (err) {
       req.claim = {};
       console.log("soft auth fail")
-    }
-    else {
+    } else {
       req.claim = payload;
       console.log("soft auth success: ", req.claim)
     }
@@ -46,6 +45,25 @@ const softAuthorize = function(req, res, next) {
 
 
 /*where gives rows, select gives cols from rows*/
+router.patch('/:id', authorize, function(req, res, next) {
+  console.log("patch box: ", req.body)
+  knex('boxes')
+    .where('boxes.id', req.body.id)
+    .update(
+      req.body
+    )
+    .returning('*')
+    .then(function(result) {
+      console.log("patch success")
+      res.send(result)
+    })
+    //what should catch return actually be?
+    .catch(function(result) {
+      console.log("patch fail")
+      res.send(result)
+    })
+})
+
 
 //this authorize is called on page refresh to display boxes to user
 router.get('/', softAuthorize, function(req, res, next) {
@@ -53,14 +71,14 @@ router.get('/', softAuthorize, function(req, res, next) {
   knex('boxes')
     //table name to join, primary key, foreign key,
     .innerJoin('users', 'users.id', 'boxes.user_id')
-    .select('users.id as user_id', 'users.email', 'boxes.width', 'boxes.height', 'boxes.depth')
+    .select('boxes.id', 'users.id as user_id', 'users.email', 'boxes.width', 'boxes.height', 'boxes.depth')
+    .orderBy('id')
     .then(function(boxes) {
       console.log('get success')
       boxes = boxes.map((ele) => {
-        if(req.claim && req.claim.id === ele.user_id){
+        if (req.claim && req.claim.id === ele.user_id) {
           ele.self = true;
-        }
-        else{
+        } else {
           ele.self = false
         }
         return ele
@@ -82,26 +100,40 @@ router.post('/', authorize, function(req, res, next) {
   console.log("entered post box")
   // console.log(req)
   knex('boxes')
-  .insert({
-    width:  req.body.width,
-    height: req.body.height,
-    depth:  req.body.depth,
-    user_id: req.claim.id
-  })
-  .then(function() {
-    console.log('succes')
-    res.send(true)
-  })
-  .catch(function() {
-    console.log('fail')
-    res.send(false)
-  })
-      //  i don't understand why to do user_id as foriegn key col,
-        //  when another api call is still needed to get username from users with it
-        //  and username still ends up on front end where it can be spoofed
-        //user_id: req.claim.id //what if you had to make another http call to get this?
+    .insert({
+      width: req.body.width,
+      height: req.body.height,
+      depth: req.body.depth,
+      user_id: req.claim.id
+    })
+    .then(function() {
+      console.log('succes')
+      res.send(true)
+    })
+    .catch(function() {
+      console.log('fail')
+      res.send(false)
+    })
+  //  i don't understand why to do user_id as foriegn key col,
+  //  when another api call is still needed to get username from users with it
+  //  and username still ends up on front end where it can be spoofed
+  //user_id: req.claim.id //what if you had to make another http call to get this?
 
-        //also, is all this syntax really nescisary?
+  //also, is all this syntax really nescisary?
+})
+
+router.delete('/:id', authorize, function(req, res, next) {
+  knex('boxes')
+    .where('id', req.params.id)
+    .del()
+    .then(function() {
+      console.log("delete box success: ")
+      res.send(true)
+    })
+    .catch(function() {
+      console.log("delete box fail: ")
+      res.send(false)
+    })
 })
 
 module.exports = router

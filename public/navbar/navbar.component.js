@@ -27,7 +27,7 @@
 
       </main>
 
-      <!-- <footer class="page-footer"> -->
+      <!--
       <footer class="page-footer footer-fixed">
         <div class="footer-fixed">
           <div class="footer-copyright">
@@ -38,6 +38,7 @@
           </div>
         </div>
       </footer>
+      -->
       <ng-include src="'./modals/auth.template.html'" modal-init></ng-include>
       `
     })

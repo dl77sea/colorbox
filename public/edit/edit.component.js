@@ -3,6 +3,7 @@
     .component('edit', {
       controller: controller,
       template: `
+
       <div id="boxgrid" class="row">
         <div class="edit-canvas">
           <a class="center-align" ng-click="$ctrl.actionOrbit()">orbit view</a>
@@ -27,9 +28,10 @@
     vm.$onInit = function() {
       console.log("inited")
 
-      console.log()
+
 
       if (updateService.box !== null) {
+        console.log("updateService.box not null")
         vm.genBox(updateService.box)
       } else {
         vm.genBox({
@@ -127,11 +129,6 @@
       vm.engine.runRenderLoop(function() {
         vm.scene.render();
       });
-
-      //this is the description of the box that gets submitted to database
-      vm.box = {
-        a: "snarf"
-      };
 
     }
 
@@ -444,7 +441,7 @@
     }
 
     vm.actionSubmit = function() {
-      console.log("actionSubmit: ", authService.username)
+      console.log("actionSubmit: ", authService.box)
       console.log(vm.box01._boundingInfo.boundingBox.minimum)
       console.log(vm.box01._boundingInfo.boundingBox.maximum)
 
@@ -452,23 +449,45 @@
       let newBoxMin = vm.box01._boundingInfo.boundingBox.minimum;
       let newBoxMax = vm.box01._boundingInfo.boundingBox.minimum;
 
-      let newBox = {
-        width: Math.abs(newBoxMin.x) + Math.abs(newBoxMax.x),
-        height: Math.abs(newBoxMin.y) + Math.abs(newBoxMax.y),
-        depth: Math.abs(newBoxMin.z) + Math.abs(newBoxMax.z)
+
+
+      // console.log(newBox)
+      if (updateService.box === null) {
+        let newBox = {
+          width: Math.abs(newBoxMin.x) + Math.abs(newBoxMax.x),
+          height: Math.abs(newBoxMin.y) + Math.abs(newBoxMax.y),
+          depth: Math.abs(newBoxMin.z) + Math.abs(newBoxMax.z)
+        }
+        //second param is request body
+        console.log("updateService.box is null")
+        $http.post('/api/boxes/', newBox)
+          .then(function(response) {
+            console.log("box insert success")
+            $state.go('posts')
+          })
+          .catch(function(response) {
+            console.log("box insert fail: ", response)
+          })
+      } else {
+        let newBox = {
+          id: updateService.box.id,
+          user_id: updateService.box.user_id,
+          width: Math.abs(newBoxMin.x) + Math.abs(newBoxMax.x),
+          height: Math.abs(newBoxMin.y) + Math.abs(newBoxMax.y),
+          depth: Math.abs(newBoxMin.z) + Math.abs(newBoxMax.z)
+        }
+        console.log("newbox patch ", updateService.box.id)
+        $http.patch('/api/boxes/' + updateService.box.id, newBox)
+          .then(function(response) {
+            console.log("box insert success")
+            updateService.box = null //i think this is needed bc init does not fre on $state.go?
+            $state.go('posts')
+          })
+          .catch(function(response) {
+            console.log("box insert fail: ", response)
+          })
       }
 
-      console.log(newBox)
-
-      //second param is request body
-      $http.post('/api/boxes/', newBox)
-        .then(function(response) {
-          console.log("box insert success")
-          $state.go('posts')
-        })
-        .catch(function(response) {
-          console.log("box insert fail: ", response)
-        })
     }
   }
 }());
