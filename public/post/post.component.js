@@ -10,12 +10,12 @@
           <canvas id={{box.id}} class="canvas-style" canvas-init></canvas>
             <div style="width: 100%; line-height: 0">
               <p style="display: inline-block; margin: 0">{{ box.email }}</p>
+              <p style="display: inline-block; margin: 0">{{ box.id }}</p>
               <div style="float: right" ng-if="box.self == true">
                 <a ng-click="$ctrl.update(box)" style="display: inline-block">edit</a>
                 <a ng-click="$ctrl.delete(box)" style="display: inline-block">delete</a>
               </div>
             </div>
-
 
         </div>
 
@@ -31,16 +31,7 @@
       </div>
 
 
-      <div class="page-container">
-        <ul class="pagination">
-          <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-          <li class="active"><a href="#!">1</a></li>
-          <li class="waves-effect"><a href="#!">2</a></li>
-          <li class="waves-effect"><a href="#!">3</a></li>
-          <li class="waves-effect"><a href="#!">4</a></li>
-          <li class="waves-effect"><a href="#!">5</a></li>
-          <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
-        </ul>
+      <div id="pgn-container" class="page-container">
       </div>
 
 
@@ -90,29 +81,86 @@
     console.log("navbar controller")
 
     vm.$onInit = function() {
+      vm.iPage = 0;
+      vm.curBoxes = [];
+      /*
+      vm.allBoxes = vm.getBoxes() //would this work with async?
+      console.log("from init vm.allBoxes ", vm.allBoxes.$$state.) //how to unpack promise?
+      */
 
-      // vm.curBoxes = [
-      //
-      //   {
-      //     color: "box01"
-      //   },
-      //   {
-      //     color: "box02"
-      //   },
-      //   {
-      //     color: "box03"
-      //   },
-      //   {
-      //     color: "box04"
-      //   },
-      //   {
-      //     color: "box05"
-      //   },
-      //   {
-      //     color: "box06"
-      //   }
-      // ]
+      //populate vm.allBoxes and get page from getBoxes.then
       vm.getBoxes()
+      vm.numItems = 6;
+
+      // vm.getPage(vm.iPage)
+    }
+
+    vm.getPage = function(iPage) {
+      console.log("page: ", iPage)
+
+      //is there an "angular way" to keep this from updating one by one in real time in view
+      for(let i=0; i < vm.numItems; i++) {
+        vm.curBoxes[i] = vm.allBoxes[iPage+i]
+      }
+
+
+      vm.paginate();
+      // getBoxes
+    }
+
+    //figure out an "angular way" to do this
+    vm.paginate = function() {
+      /*
+
+      <ul class="pagination">
+        <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
+        <li class="active"><a href="#!">1</a></li>
+        <li class="waves-effect"><a href="#!">2</a></li>
+        <li class="waves-effect"><a href="#!">3</a></li>
+        <li class="waves-effect"><a href="#!">4</a></li>
+        <li class="waves-effect"><a href="#!">5</a></li>
+        <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+      </ul>
+
+      */
+
+      let pgnUl = $('<ul>').addClass('pagination')
+
+      let pgnLeftLi = $('<li>').addClass('disabled')
+      let pgnLeftA = $('<a>').attr('href','#!')
+      let pgnLeftI = $('<i>').addClass('material-icons').text('chevron_left')
+
+      let pgnNumLi = $('<li>') //.addClass("waves-effect") //alt class: .addClass('active')
+      let pgnNumA = $('<a>').attr('href','#!') //.text(`${valNum}`)
+
+      let pgnRightLi = $('<li>').addClass('waves-effect')
+      let pgnRightA = $('<a>').attr('href','#!')
+      let pgnRightI = $('<i>').addClass('material-icons').text('chevron_right')
+
+      //build paginator
+      pgnLeftA.append(pgnLeftI)
+      pgnLeftLi.append(pgnLeftA)
+
+      let pgnNumLi1 = $('<li>').addClass('active')
+      pgnNumLi1.append($('<a>').attr('href','#!').text('1'))
+
+      let pgnNumLi2 = $('<li>').addClass('waves-effect')
+      pgnNumLi2.append($('<a>').attr('href','#!').text('2'))
+
+      pgnRightA.append(pgnRightI)
+      pgnRightLi.append(pgnRightA)
+
+
+
+      pgnUl.append(pgnLeftLi)
+      pgnUl.append(pgnNumLi1)
+      pgnUl.append(pgnNumLi2)
+      pgnUl.append(pgnRightLi)
+
+      console.log("pgnUl: ", pgnUl[0])
+      $('#pgn-container').append(pgnUl[0])
+
+
     }
 
     vm.formSubmit = function() {
@@ -196,13 +244,12 @@
     vm.getBoxes = function() {
       //load up all the boxes to front end but do not render them.
       //rendering will be front-end paginated
-      // (todo: paginate this load)
-
-      //request this endpoint from server.js
-      $http.get('/api/boxes').then(function(response) {
-        vm.curBoxes = response.data;
-        console.log("curBoxes: ", vm.curBoxes)
-      })
+      return $http.get('/api/boxes')
+        .then(function(response) {
+          console.log("allBoxes: ", response.data)
+          vm.allBoxes = response.data;
+          vm.getPage(vm.iPage)
+        })
     }
 
     vm.launchEditor = function() {
