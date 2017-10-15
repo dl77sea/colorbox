@@ -5,24 +5,29 @@
       controller: controller,
       template: `
       <div id="boxes" class="row row-mod">
-        <div class="entry-container col s2 m4 l4" ng-repeat="box in $ctrl.curBoxes">
+        <div class="col s2 m4 l4" ng-repeat="box in $ctrl.curBoxes">
+
+        <div style="position: relative">
+
+          <p style="position: absolute; margin-top: 5px; margin-left: 5px; margin-bottom: 0">{{ box.id }}</p>
 
           <canvas id={{box.id}} class="canvas-style" canvas-init></canvas>
-            <div style="width: 100%; line-height: 0">
-              <p style="display: inline-block; margin: 0">{{ box.email }}</p>
-              <p style="display: inline-block; margin: 0">{{ box.id }}</p>
-              <div style="float: right" ng-if="box.self == true">
-                <a ng-click="$ctrl.update(box)" style="display: inline-block">edit</a>
-                <a ng-click="$ctrl.delete(box)" style="display: inline-block">delete</a>
-              </div>
-            </div>
+
+          <div style="position: absolute; margin-top: -30px; margin-left: 5px; display: inline-block; float: left">
+            <a style="margin-bottom: 0; margin-left: 0" ng-click="$ctrl.update(box)" style="display: inline-block">edit</a>
+            <a style="margin-bottom: 0; margin-left: 0" ng-click="$ctrl.delete(box)" style="display: inline-block">delete</a>
+          </div>
+
+          <div style="position: relative; float: right">
+            <p style="margin-bottom: 0; margin-right: 10px; margin-top: -30px">{{ box.email }}</p>
+          </div>
+
+          </div>
+          <div style="padding-bottom: 20px"></div>
+        </div>
 
         </div>
 
-      </div>
-
-      <!-- <footer class="page-footer footer-fixed">-->
-      <!-- <div class="footer-fixed"> -->
 
       <div class="page-container">
       <button ng-click="$ctrl.launchEditor()" class="btn waves-effect waves-light" type="submit" name="action">Add a box!
@@ -33,16 +38,20 @@
 
       <div id="pgn-container" class="page-container">
       </div>
-
-
-
-
-
-
-
       `
     })
+    /*
 
+                <!-- <div style="width: 100%; line-height: 0">
+                  <p style="margin-bottom: 0">{{ box.email }}</p>
+
+                  <div style="float: right" ng-if="box.self == true">
+                    <a ng-click="$ctrl.update(box)" style="display: inline-block">edit</a>
+                    <a ng-click="$ctrl.delete(box)" style="display: inline-block">delete</a>
+                  </div>
+                </div>-->
+
+*/
     //this is used because it is called when the canvas is available in dom,
     //so then it becomes possible to call $ctrl.genBox(box, canvas),
     //as genBox() needs a canvas element in the dom to work.
