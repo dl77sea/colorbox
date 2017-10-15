@@ -141,23 +141,27 @@
       pgnLeftA.append(pgnLeftI)
       pgnLeftLi.append(pgnLeftA)
 
-      let pgnNumLi1 = $('<li>').addClass('active')
-      pgnNumLi1.append($('<a>').attr('href','#!').text('1'))
-
-      let pgnNumLi2 = $('<li>').addClass('waves-effect')
-      pgnNumLi2.append($('<a>').attr('href','#!').text('2'))
-
       pgnRightA.append(pgnRightI)
       pgnRightLi.append(pgnRightA)
 
-
-
       pgnUl.append(pgnLeftLi)
-      pgnUl.append(pgnNumLi1)
-      pgnUl.append(pgnNumLi2)
+
+      for(let i=1; i <= 3; i++) {
+        let li;
+        if(i===1) {
+          li = $('<li>').addClass('active')
+            .append($('<a>').attr('href','#!').text(`${i}`) )
+        } else {
+          li = $('<li>').addClass('waves-effect')
+            .append($('<a>').attr('href','#!').text(`${i}`) )
+        }
+        pgnUl.append(li)
+      }
+
       pgnUl.append(pgnRightLi)
 
-      console.log("pgnUl: ", pgnUl[0])
+      //console.log("first: ", pgnUl.find('li').first()[0])
+      //pgnUl.find('li').first().addClass('active')
       $('#pgn-container').append(pgnUl[0])
 
 
