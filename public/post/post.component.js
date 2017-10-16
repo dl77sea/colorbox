@@ -91,6 +91,7 @@
       vm.iPage = 0;
       vm.prevPage = 1;
       vm.numPages = null;
+      vm.prevNumPages = null;
       vm.curBoxes = [];
       /*
       vm.allBoxes = vm.getBoxes() //would this work with async?
@@ -106,30 +107,27 @@
 
     vm.loadPage = function(iPage) {
       console.log("page: ", iPage)
-
+      let i;
+      vm.curBoxes=[];
       //is there an "angular way" to keep this from updating one by one in real time in view
-      for (let i = 0; i < vm.numItems; i++) {
-        vm.curBoxes[i] = vm.allBoxes[iPage + i]
+      for (i = 0; i < vm.numItems; i++) {
+
+        if(vm.allBoxes[i+(vm.numItems*iPage)] !== undefined) {
+          vm.curBoxes[i] = vm.allBoxes[(iPage * vm.numItems) + i]
+          // vm.curBoxes.push(vm.allBoxes[(iPage * vm.numItems) + i])
+          console.log("from loadPage for: ", vm.curBoxes[i].id)
+        }
       }
 
     }
 
-    //figure out an "angular way" to do this
+    //figure out an "angular way" to do this:
+    //this gets called on init when items are more than fit on one page.
+    //this gets called on calls to post if items fit exceed current pages.
+    //this gets called on calls to delete if items require less fit current pages.
+    //this does not get called on calls to patch.
     vm.buildPaginator = function() {
-
-      /*
-
-      <ul class="pagination">
-        <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-        <li class="active"><a href="#!">1</a></li>
-        <li class="waves-effect"><a href="#!">2</a></li>
-        <li class="waves-effect"><a href="#!">3</a></li>
-        <li class="waves-effect"><a href="#!">4</a></li>
-        <li class="waves-effect"><a href="#!">5</a></li>
-        <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
-      </ul>
-
-      */
+      $('#pgn-container').empty()
 
       let pgnUl = $('<ul>').addClass('pagination').attr('id', 'pgn-ul')
 
@@ -153,6 +151,7 @@
 
       pgnUl.append(pgnLeftLi)
 
+      //add number of pages needed for current load in allBoxes
       for (let i = 1; i <= vm.numPages; i++) {
         let li;
         if (i === 1) {
@@ -165,6 +164,7 @@
         pgnUl.append(li)
       }
 
+      //event handler for this paginator
       pgnUl.on('click', 'li', function() {
         let $curEle = $(this);
         let i = $(this).index()
@@ -183,19 +183,17 @@
 
           let prevEle = $("#pgn-ul").find("li").eq(vm.prevPage)
 
-          // vm.loadPage(i)
           prevEle.removeClass('active').addClass('waves-effect')
           $curEle.addClass('active')
+          vm.iPage = i-1;
           vm.prevPage = i;
+          vm.loadPage(vm.iPage)
         }
-
       })
 
       pgnUl.append(pgnRightLi)
-
       $('#pgn-container').append(pgnUl[0])
     }
-
 
     vm.formSubmit = function() {
       console.log("formSubmit from post")
@@ -282,13 +280,15 @@
         .then(function(response) {
           console.log("allBoxes: ", response.data)
           vm.allBoxes = response.data;
-          vm.numPages = Math.floor(vm.allBoxes.length / vm.numItems)
-          // if (vm.numPages > 1) {
-            vm.buildPaginator()
-          // }
 
-          //load first (or only) page
-          vm.loadPage(0)
+          //update paginator if total num of boxes exceeds fitting on one page
+          vm.numPages = Math.ceil(vm.allBoxes.length / vm.numItems)
+          if (vm.numPages > 1) {
+            // vm.buildPaginator()
+          }
+
+          //load whatever page is currently paged (0 defualt)
+          vm.loadPage(vm.iPage)
 
         })
     }
@@ -312,7 +312,7 @@
       updateService.box = box
       $state.go('edit')
     }
-    //$http.patch('/api/boxes/' + updateService.box.id, newBox)
+
     vm.delete = function(box) {
       console.log("enter post delete")
       $http.delete('/api/boxes/' + box.id)

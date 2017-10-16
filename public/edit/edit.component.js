@@ -449,8 +449,6 @@
       let newBoxMin = vm.box01._boundingInfo.boundingBox.minimum;
       let newBoxMax = vm.box01._boundingInfo.boundingBox.minimum;
 
-
-
       // console.log(newBox)
       if (updateService.box === null) {
         let newBox = {
@@ -460,6 +458,8 @@
         }
         //second param is request body
         console.log("updateService.box is null")
+
+        //should this communicate via service numBoxes for paginator build?
         $http.post('/api/boxes/', newBox)
           .then(function(response) {
             console.log("box insert success")
