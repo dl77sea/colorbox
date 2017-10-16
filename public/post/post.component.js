@@ -5,7 +5,10 @@
       controller: controller,
       template: `
       <div id="boxes" class="row row-mod">
-        <div class="col s2 m4 l4" ng-repeat="box in $ctrl.curBoxes">
+
+        <!--<div ng-controller="controller" class="col s2 m4 l4" ng-repeat="box in curBoxes">-->
+        <!--<div class="col s2 m4 l4" ng-repeat="box in $ctrl.curBoxes">-->
+        <div class="col s2 m4 l4" ng-repeat="box in $ctrl.curBoxes track by $index">
         <div style="position: relative">
           <p style="position: absolute; margin-top: 5px; margin-left: 5px; margin-bottom: 0">id {{ box.id }}</p>
             <canvas id={{box.id}} class="canvas-style" canvas-init></canvas>
@@ -101,16 +104,21 @@
     vm.loadPage = function(iPage) {
       console.log("page: ", iPage)
       let i;
-      vm.curBoxes=[];
+      // vm.curBoxes=[];
+      const newBoxes = [];
       //is there an "angular way" to keep this from updating one by one in real time in view
       for (i = 0; i < vm.numItems; i++) {
 
         if(vm.allBoxes[i+(vm.numItems*iPage)] !== undefined) {
-          vm.curBoxes[i] = vm.allBoxes[(iPage * vm.numItems) + i]
+          newBoxes.push(vm.allBoxes[(iPage * vm.numItems) + i]);
           // vm.curBoxes.push(vm.allBoxes[(iPage * vm.numItems) + i])
-          console.log("from loadPage for: ", vm.curBoxes[i].id)
+          // console.log("from loadPage for: ", vm.curBoxes[i].id)
         }
       }
+
+      vm.curBoxes = newBoxes;
+
+      console.log(vm.curBoxes);
 
     }
 
@@ -278,7 +286,7 @@
           //update paginator if total num of boxes exceeds fitting on one page
           vm.numPages = Math.ceil(vm.allBoxes.length / vm.numItems)
           if (vm.numPages > 1) {
-            // vm.buildPaginator()
+            vm.buildPaginator()
           }
 
           //load whatever page is currently paged (0 defualt)
