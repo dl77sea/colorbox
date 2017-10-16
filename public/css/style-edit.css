@@ -1,0 +1,16 @@
+
+
+
+.edit-canvas {
+  outline: none;
+  width: 100%;
+  height: 493px; /* height: 258px; eventually, dynamically set this to be same as width*/
+  background-color: none;
+  margin: auto;
+  touch-action: auto;
+  padding: 0;
+}
+
+.edit-icon {
+  font-size: 48px;
+}

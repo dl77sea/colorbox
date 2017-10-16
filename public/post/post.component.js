@@ -5,35 +5,26 @@
       controller: controller,
       template: `
       <div id="boxes" class="row row-mod">
-        <div class="col s2 m4 l4" ng-repeat="box in $ctrl.curBoxes">
-
+        <div class="col s2 m3 l3" ng-repeat="box in $ctrl.curBoxes">
         <div style="position: relative">
-
           <p style="position: absolute; margin-top: 5px; margin-left: 5px; margin-bottom: 0">{{ box.id }}</p>
-
-          <canvas id={{box.id}} class="canvas-style" canvas-init></canvas>
-
+            <canvas id={{box.id}} class="canvas-style" canvas-init></canvas>
           <div style="position: absolute; margin-top: -30px; margin-left: 5px; display: inline-block; float: left">
-            <a style="margin-bottom: 0; margin-left: 0" ng-click="$ctrl.update(box)" style="display: inline-block">edit</a>
-            <a style="margin-bottom: 0; margin-left: 0" ng-click="$ctrl.delete(box)" style="display: inline-block">delete</a>
+            <a style="margin-bottom: 0; margin-left: 0" ng-click="$ctrl.update(box)" style="display: inline-block" ng-if="box.self == true">edit</a>
+            <a style="margin-bottom: 0; margin-left: 0" ng-click="$ctrl.delete(box)" style="display: inline-block" ng-if="box.self == true">delete</a>
           </div>
-
           <div style="position: relative; float: right">
             <p style="margin-bottom: 0; margin-right: 10px; margin-top: -30px">{{ box.email }}</p>
           </div>
-
           </div>
-          <div style="padding-bottom: 20px"></div>
+            <div style="padding-bottom: 20px"></div>
         </div>
-
         </div>
-
       <div class="page-container">
       <button ng-click="$ctrl.launchEditor()" class="btn waves-effect waves-light" type="submit" name="action">Add a box!
       <!-- <i class="material-icons right">send</i> -->
       </button>
       </div>
-
       <div id="pgn-container" class="page-container">
       </div>
       `
@@ -100,7 +91,7 @@
 
       //populate vm.allBoxes and get page from getBoxes.then
       vm.getBoxes()
-      vm.numItems = 6;
+      vm.numItems = 8;
 
       // vm.getPage(vm.iPage)
     }
@@ -223,7 +214,7 @@
 
       let scene = new BABYLON.Scene(engine);
 
-      scene.clearColor = new BABYLON.Color3(0, 1, 0);
+      scene.clearColor = new BABYLON.Color3(1, 1, 1);
 
       let camera = new BABYLON.ArcRotateCamera("ArcRotateCamera", 1, 1, 120, new BABYLON.Vector3.Zero(), scene);
       camera.setPosition(new BABYLON.Vector3(50, 50, -100));

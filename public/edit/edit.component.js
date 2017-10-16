@@ -4,16 +4,33 @@
       controller: controller,
       template: `
 
-      <div id="boxgrid" class="row">
+      <!--<div id="boxgrid" class="row">-->
+
+      <div class="row">
+        <div class="col m3 l3"></div>
+        <div class="col s12 m6 l6">
+        <div class="col m3 l3"></div>
+
         <div class="edit-canvas">
-          <a class="center-align" ng-click="$ctrl.actionOrbit()">orbit view</a>
-          <div class="canvas-style center-align">
-            <canvas class="canvas-style" id="editCanvas"></canvas>
-            <a ng-click="$ctrl.actionSubmit()">submit</a>
-          </div>
-          <a class="center-align" ng-click="$ctrl.actionMove()">move faces</a>
+
+          <canvas style="width: 100%; height: 100%; outline: none;" id="editCanvas"></canvas>
+        <a ng-click="$ctrl.actionOrbit()">
+          <i style="float: left; position: relative; margin-left: 35px; margin-top: -75px; padding: 0" class="material-icons edit-icon">3d_rotation</i></a>
+        <a ng-click="$ctrl.actionMove()">
+          <i style="float: right; position: relative; margin-right: 35px; margin-top: -75px; padding: 0" class="material-icons edit-icon">edit</i></a>
+
+        </div>
+
+        <div class="page-container">
+        <button ng-click="$ctrl.actionSubmit()"class="btn waves-effect waves-light" type="submit" name="action">Add a box!
+        <!-- <i class="material-icons right">send</i> -->
+        </button>
+        </div>
+
         </div>
         </div>
+
+        <!--</div>-->
         `
     })
 
@@ -51,7 +68,7 @@
 
       vm.scene = new BABYLON.Scene(vm.engine);
 
-      vm.scene.clearColor = new BABYLON.Color3(0, 1, 0);
+      vm.scene.clearColor = new BABYLON.Color3(1, 1, 1);
 
       vm.camera = new BABYLON.ArcRotateCamera("ArcRotateCamera", 1, 1, 120, new BABYLON.Vector3.Zero(), vm.scene);
       vm.camera.setPosition(new BABYLON.Vector3(50, 50, -100));

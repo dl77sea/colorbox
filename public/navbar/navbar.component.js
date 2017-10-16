@@ -7,7 +7,7 @@
         <div class="navbar-fixed">
           <nav>
             <div class="nav-wrapper">
-              <a ui-sref="posts" class="brand-logo">Logo</a>
+              <a ui-sref="posts" class="brand-logo">Boxes</a>
               <ul id="nav-mobile" class="right hide-on-med-and-down">
                 <li>
                   <a ng-if="$ctrl.loginMode=='signedout'" class="modal-trigger" href="#modal-auth">Sign in</a>

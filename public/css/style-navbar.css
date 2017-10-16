@@ -1,3 +1,16 @@
 .brand-logo {
   margin-left: 15px;
+  color: black;
+}
+nav {
+  color: none;
+  box-shadow: none;
+  background-color: white;
+}
+nav ul a {
+  color: black;
+}
+
+nav .brand-logo {
+  color: black;
 }
