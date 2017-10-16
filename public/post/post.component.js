@@ -28,13 +28,11 @@
 
         </div>
 
-
       <div class="page-container">
       <button ng-click="$ctrl.launchEditor()" class="btn waves-effect waves-light" type="submit" name="action">Add a box!
       <!-- <i class="material-icons right">send</i> -->
       </button>
       </div>
-
 
       <div id="pgn-container" class="page-container">
       </div>
@@ -91,6 +89,8 @@
 
     vm.$onInit = function() {
       vm.iPage = 0;
+      vm.prevPage = 1;
+      vm.numPages = null;
       vm.curBoxes = [];
       /*
       vm.allBoxes = vm.getBoxes() //would this work with async?
@@ -104,21 +104,19 @@
       // vm.getPage(vm.iPage)
     }
 
-    vm.getPage = function(iPage) {
+    vm.loadPage = function(iPage) {
       console.log("page: ", iPage)
 
       //is there an "angular way" to keep this from updating one by one in real time in view
-      for(let i=0; i < vm.numItems; i++) {
-        vm.curBoxes[i] = vm.allBoxes[iPage+i]
+      for (let i = 0; i < vm.numItems; i++) {
+        vm.curBoxes[i] = vm.allBoxes[iPage + i]
       }
 
-
-      vm.paginate();
-      // getBoxes
     }
 
     //figure out an "angular way" to do this
-    vm.paginate = function() {
+    vm.buildPaginator = function() {
+
       /*
 
       <ul class="pagination">
@@ -133,17 +131,17 @@
 
       */
 
-      let pgnUl = $('<ul>').addClass('pagination')
+      let pgnUl = $('<ul>').addClass('pagination').attr('id', 'pgn-ul')
 
       let pgnLeftLi = $('<li>').addClass('disabled')
-      let pgnLeftA = $('<a>').attr('href','#!')
+      let pgnLeftA = $('<a>').attr('href', '#!')
       let pgnLeftI = $('<i>').addClass('material-icons').text('chevron_left')
 
       let pgnNumLi = $('<li>') //.addClass("waves-effect") //alt class: .addClass('active')
-      let pgnNumA = $('<a>').attr('href','#!') //.text(`${valNum}`)
+      let pgnNumA = $('<a>').attr('href', '#!') //.text(`${valNum}`)
 
       let pgnRightLi = $('<li>').addClass('waves-effect')
-      let pgnRightA = $('<a>').attr('href','#!')
+      let pgnRightA = $('<a>').attr('href', '#!')
       let pgnRightI = $('<i>').addClass('material-icons').text('chevron_right')
 
       //build paginator
@@ -155,26 +153,49 @@
 
       pgnUl.append(pgnLeftLi)
 
-      for(let i=1; i <= 3; i++) {
+      for (let i = 1; i <= vm.numPages; i++) {
         let li;
-        if(i===1) {
+        if (i === 1) {
           li = $('<li>').addClass('active')
-            .append($('<a>').attr('href','#!').text(`${i}`) )
+            .append($('<a>').attr('href', '#!').text(`${i}`))
         } else {
           li = $('<li>').addClass('waves-effect')
-            .append($('<a>').attr('href','#!').text(`${i}`) )
+            .append($('<a>').attr('href', '#!').text(`${i}`))
         }
         pgnUl.append(li)
       }
 
+      pgnUl.on('click', 'li', function() {
+        let $curEle = $(this);
+        let i = $(this).index()
+        console.log(i)
+        console.log(vm.numPages)
+
+        if (i === 0) {
+          //paging left
+          console.log("page left")
+        } else if (i === vm.numPages + 1) {
+          //paging right
+          console.log("page right")
+        } else {
+          //load requested page
+          console.log("load page")
+
+          let prevEle = $("#pgn-ul").find("li").eq(vm.prevPage)
+
+          // vm.loadPage(i)
+          prevEle.removeClass('active').addClass('waves-effect')
+          $curEle.addClass('active')
+          vm.prevPage = i;
+        }
+
+      })
+
       pgnUl.append(pgnRightLi)
 
-      //console.log("first: ", pgnUl.find('li').first()[0])
-      //pgnUl.find('li').first().addClass('active')
       $('#pgn-container').append(pgnUl[0])
-
-
     }
+
 
     vm.formSubmit = function() {
       console.log("formSubmit from post")
@@ -257,11 +278,18 @@
     vm.getBoxes = function() {
       //load up all the boxes to front end but do not render them.
       //rendering will be front-end paginated
-      return $http.get('/api/boxes')
+      $http.get('/api/boxes')
         .then(function(response) {
           console.log("allBoxes: ", response.data)
           vm.allBoxes = response.data;
-          vm.getPage(vm.iPage)
+          vm.numPages = Math.floor(vm.allBoxes.length / vm.numItems)
+          // if (vm.numPages > 1) {
+            vm.buildPaginator()
+          // }
+
+          //load first (or only) page
+          vm.loadPage(0)
+
         })
     }
 
@@ -287,7 +315,7 @@
     //$http.patch('/api/boxes/' + updateService.box.id, newBox)
     vm.delete = function(box) {
       console.log("enter post delete")
-      $http.delete('/api/boxes/'+box.id)
+      $http.delete('/api/boxes/' + box.id)
         .then(function() {
           vm.getBoxes()
         })
