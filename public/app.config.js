@@ -96,6 +96,7 @@
         .then(function success(response) {
           console.log("form signin success", response)
           vm.username = response.email;
+          // vm.test()
           console.log("authService formSubmitSignin:", response.email)
           $('#modal-auth').modal('close');
           return {success: true, formMode: 'signin', loginMode: 'signedin'}

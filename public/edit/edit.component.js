@@ -15,14 +15,14 @@
 
           <canvas style="width: 100%; height: 100%; outline: none;" id="editCanvas"></canvas>
         <a ng-click="$ctrl.actionOrbit()">
-          <i style="float: left; position: relative; margin-left: 35px; margin-top: -75px; padding: 0" class="material-icons edit-icon">3d_rotation</i></a>
+          <i style="float: left; position: relative; margin-left: 25px; margin-top: -75px; padding: 0" class="material-icons edit-icon">3d_rotation</i></a>
         <a ng-click="$ctrl.actionMove()">
-          <i style="float: right; position: relative; margin-right: 35px; margin-top: -75px; padding: 0" class="material-icons edit-icon">edit</i></a>
-
+          <i style="float: right; position: relative; margin-right: 25px; margin-top: -75px; padding: 0" class="material-icons edit-icon">edit</i></a>
         </div>
 
-        <div class="page-container">
-        <button ng-click="$ctrl.actionSubmit()"class="btn waves-effect waves-light" type="submit" name="action">Add a box!
+        <div class="page-container" style="margin-top: -65px">
+         <a class="submit-icon btn-floating btn-large waves-effect waves-light red"><i ng-click="$ctrl.actionSubmit()" class="material-icons">send</i></a>
+        <!--<button ng-click="$ctrl.actionSubmit()" class="btn waves-effect waves-light" type="submit" name="action">Add a box!-->
         <!-- <i class="material-icons right">send</i> -->
         </button>
         </div>
@@ -464,7 +464,11 @@
 
       //use boxe's bounding box to get w,h,d size of new box
       let newBoxMin = vm.box01._boundingInfo.boundingBox.minimum;
-      let newBoxMax = vm.box01._boundingInfo.boundingBox.minimum;
+      let newBoxMax = vm.box01._boundingInfo.boundingBox.maximum;
+
+      console.log("newBoxMin", newBoxMin)
+      console.log("newBoxMax", newBoxMax)
+
 
       // console.log(newBox)
       if (updateService.box === null) {
@@ -486,6 +490,9 @@
             console.log("box insert fail: ", response)
           })
       } else {
+        console.log("patch will be called")
+        console.log("from else newBoxMin", newBoxMin)
+        console.log("from else newBoxMax", newBoxMax)
         let newBox = {
           id: updateService.box.id,
           user_id: updateService.box.user_id,

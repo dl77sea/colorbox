@@ -18,7 +18,7 @@ const boxesList = [
     width: 25,
     height: 25,
     depth: 25,
-    user_id: 2
+    user_id: 1
   },
   {
     width: 25,
@@ -27,31 +27,31 @@ const boxesList = [
     user_id: 3
   },
 
-  {width: 25, height: 25, depth: 25, user_id: 3},
-  {width: 25, height: 25, depth: 25, user_id: 3},
-  {width: 25, height: 25, depth: 25, user_id: 3},
-
-
-
-  {width: 25, height: 25, depth: 25, user_id: 1},
-  {width: 25, height: 25, depth: 25, user_id: 1},
-  {width: 25, height: 25, depth: 25, user_id: 1},
-
-  {width: 25, height: 25, depth: 25, user_id: 1},
-  {width: 25, height: 25, depth: 25, user_id: 1},
-  {width: 25, height: 25, depth: 25, user_id: 2},
-
-  {width: 25, height: 25, depth: 25, user_id: 3},
-  {width: 25, height: 25, depth: 25, user_id: 3},
-  {width: 25, height: 25, depth: 25, user_id: 3},
-
   {width: 25, height: 25, depth: 25, user_id: 2},
   {width: 25, height: 25, depth: 25, user_id: 1},
-  {width: 25, height: 25, depth: 25, user_id: 2},
+  {width: 25, height: 25, depth: 25, user_id: 3},
+
+
 
   {width: 25, height: 25, depth: 25, user_id: 1},
+  {width: 25, height: 25, depth: 25, user_id: 2},
   {width: 25, height: 25, depth: 25, user_id: 1},
-  {width: 25, height: 25, depth: 25, user_id: 3}
+
+  {width: 25, height: 25, depth: 25, user_id: 3},
+  {width: 25, height: 25, depth: 25, user_id: 1}
+  // {width: 25, height: 25, depth: 25, user_id: 2},
+  //
+  // {width: 25, height: 25, depth: 25, user_id: 3},
+  // {width: 25, height: 25, depth: 25, user_id: 3},
+  // {width: 25, height: 25, depth: 25, user_id: 3},
+  //
+  // {width: 25, height: 25, depth: 25, user_id: 2},
+  // {width: 25, height: 25, depth: 25, user_id: 1},
+  // {width: 25, height: 25, depth: 25, user_id: 2},
+  //
+  // {width: 25, height: 25, depth: 25, user_id: 1},
+  // {width: 25, height: 25, depth: 25, user_id: 1},
+  // {width: 25, height: 25, depth: 25, user_id: 3}
 
 ]
 

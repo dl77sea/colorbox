@@ -11,6 +11,15 @@
   padding: 0;
 }
 
+
+.btn-floating.btn-large {
+    width: 75px;
+    height: 75px;
+}
+.btn-floating.btn-large i {
+    line-height: 75px
+}
+
 .edit-icon {
   font-size: 48px;
 }
