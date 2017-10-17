@@ -8,25 +8,30 @@
       // },
       controller: controller,
       template: `
-      <div id="boxes" class="row row-mod">
+      <div class="row row-mod">
 
         <!--<div ng-controller="controller" class="col s2 m4 l4" ng-repeat="box in curBoxes">-->
         <!--<div class="col s2 m4 l4" ng-repeat="box in $ctrl.curBoxes">-->
+
         <div class="col s2 m4 l4" ng-repeat="box in $ctrl.curBoxes track by $index">
-        <div style="position: relative">
-          <p style="position: absolute; margin-top: 5px; margin-left: 5px; margin-bottom: 0">id {{ box.id }}</p>
-            <canvas id={{box.id}} class="canvas-style" canvas-init></canvas>
-          <div style="position: absolute; margin-top: -30px; margin-left: 5px; display: inline-block; float: left">
-            <a style="margin-bottom: 0; margin-left: 0" ng-click="$ctrl.update(box)" style="display: inline-block" ng-if="box.self == true">edit</a>
-            <a style="margin-bottom: 0; margin-left: 0" ng-click="$ctrl.delete(box)" style="display: inline-block" ng-if="box.self == true">delete</a>
-          </div>
-          <div style="position: relative; float: right">
-            <p style="margin-bottom: 0; margin-right: 10px; margin-top: -30px">by {{ box.email }}</p>
-          </div>
-          </div>
-            <div style="padding-bottom: 20px"></div>
+
+            <div style="position: relative">
+              <p style="position: absolute; margin-top: 5px; margin-left: 5px; margin-bottom: 0">Box id No. {{ box.id }}</p>
+                <canvas id={{box.id}} class="canvas-style" canvas-init></canvas>
+              <div style="position: absolute; margin-top: -30px; margin-left: 5px; display: inline-block; float: left">
+                <a style="margin-bottom: 0; margin-left: 0" ng-click="$ctrl.update(box)" style="display: inline-block" ng-if="box.self == true">edit</a>
+                <a style="margin-bottom: 0; margin-left: 0" ng-click="$ctrl.delete(box)" style="display: inline-block" ng-if="box.self == true">delete</a>
+              </div>
+              <div style="position: relative; float: right">
+                <p style="margin-bottom: 0; margin-right: 10px; margin-top: -30px">by {{ box.email }}</p>
+              </div>
+              </div>
+                <div ng-if="($index < 3)" style="padding-bottom:75px"></div>
+                <div ng-if="($index > 3)" style="padding-bottom:15px"></div>
+            </div>
+
         </div>
-        </div>
+
       <div class="page-container">
       <button ng-click="$ctrl.launchEditor()" class="btn waves-effect waves-light" type="submit" name="action">Add a box!
       <!-- <i class="material-icons right">send</i> -->
@@ -85,7 +90,7 @@
     console.log("navbar controller")
 
     vm.$onInit = function() {
-      
+
       vm.iPage = 0;
       vm.prevPage = 1;
       vm.numPages = null;
