@@ -103,7 +103,7 @@
       authService.formSubmit(vm.email, vm.password, vm.formMode)
         .then(function(response) {
           if (response.success === true) {
-            console.log("enter navbar formSubmit success")
+            console.log("now logged in")
             console.log(response)
             vm.formMode = response.formMode;
             vm.loginMode = response.loginMode;

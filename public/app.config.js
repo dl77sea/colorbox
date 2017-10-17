@@ -59,6 +59,7 @@
       .then(function(response) {
         console.log("authService success: ", response.data)
         // vm.loginMode = "signedin"
+        // this.test();
         vm.username = response.data;
       })
       .catch(function(response) {
@@ -67,7 +68,6 @@
         vm.loginMode = "signedout"
         vm.formMode = "signin"
       })
-
 
     vm.formSubmit = function(email, password, formMode) {
       console.log("formSubmit")
@@ -96,7 +96,7 @@
         .then(function success(response) {
           console.log("form signin success", response)
           vm.username = response.email;
-          // vm.test()
+
           console.log("authService formSubmitSignin:", response.email)
           $('#modal-auth').modal('close');
           return {success: true, formMode: 'signin', loginMode: 'signedin'}

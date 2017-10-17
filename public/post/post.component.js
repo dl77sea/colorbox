@@ -2,6 +2,10 @@
   //module('myModule', ['hl.sticky']);
   angular.module('app')
     .component('post', {
+      // bindings: {
+      //   // person: '<',
+      //   onSave: '&' // this allows an outer component to pass in a function, basically
+      // },
       controller: controller,
       template: `
       <div id="boxes" class="row row-mod">
@@ -53,18 +57,17 @@
           let canvas = element[0];
 
           $scope.$parent.$ctrl.genBox($scope.box, canvas)
-
           //needed for materialize modal stuff to work
           $(document).ready(function() {
             // the "href" attribute of the modal trigger must specify the modal ID that wants to be triggered
             $('.modal').modal();
           });
-
         }
       }
     });
 
   controller.$inject = ['$state', '$http', 'authService', 'updateService'];
+
 
   function controller($state, $http, authService, updateService) {
     // function controller() {
@@ -82,6 +85,7 @@
     console.log("navbar controller")
 
     vm.$onInit = function() {
+      
       vm.iPage = 0;
       vm.prevPage = 1;
       vm.numPages = null;
@@ -98,9 +102,20 @@
 
       // vm.getPage(vm.iPage)
     }
-    vm.test = function () {
+
+    // vm.submit = function() {
+    //   // this line says
+    //   //   call the passed in function..
+    //   //   and where it asked for `savedPerson`, pass in `vm.person`
+    //   vm.onSave({
+    //     vm.test();
+    //   })
+    // }
+
+    vm.test = function() {
       console.log("this is test")
     }
+
     vm.loadPage = function(iPage) {
       console.log("page: ", iPage)
       let i;
@@ -109,7 +124,7 @@
       //is there an "angular way" to keep this from updating one by one in real time in view
       for (i = 0; i < vm.numItems; i++) {
 
-        if(vm.allBoxes[i+(vm.numItems*iPage)] !== undefined) {
+        if (vm.allBoxes[i + (vm.numItems * iPage)] !== undefined) {
           newBoxes.push(vm.allBoxes[(iPage * vm.numItems) + i]);
           // vm.curBoxes.push(vm.allBoxes[(iPage * vm.numItems) + i])
           // console.log("from loadPage for: ", vm.curBoxes[i].id)
@@ -120,6 +135,10 @@
 
       console.log(vm.curBoxes);
 
+    }
+
+    vm.test = function() {
+      console.log("test")
     }
 
     //figure out an "angular way" to do this:
@@ -186,7 +205,7 @@
 
           prevEle.removeClass('active').addClass('waves-effect')
           $curEle.addClass('active')
-          vm.iPage = i-1;
+          vm.iPage = i - 1;
           vm.prevPage = i;
           vm.loadPage(vm.iPage)
         }
@@ -195,22 +214,23 @@
       pgnUl.append(pgnRightLi)
       $('#pgn-container').append(pgnUl[0])
     }
-
-    vm.formSubmit = function() {
-      console.log("formSubmit from post")
-      authService.formSubmit(vm.email, vm.password, vm.formMode)
-        .then(function(response) {
-
-          if (response.success === true) {
-            vm.formMode = response.formMode;
-            vm.loginMode = response.loginMode;
-          }
-        })
-        .catch(function(response) {
-          console.log("signup error")
-        })
-    }
-
+    //
+    // vm.formSubmit = function() {
+    //   console.log("formSubmit from post")
+    //   authService.formSubmit(vm.email, vm.password, vm.formMode)
+    //     .then(function(response) {
+    //
+    //       if (response.success === true) {
+    //         vm.formMode = response.formMode;
+    //         vm.loginMode = response.loginMode;
+    //         console.log("now logged in")
+    //       }
+    //     })
+    //     .catch(function(response) {
+    //       console.log("signup error")
+    //     })
+    // }
+    //
     //generate box from parameters from box description from database
     vm.genBox = function(box, canvas) {
       console.log("cur box", box)
