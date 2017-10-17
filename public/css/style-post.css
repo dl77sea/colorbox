@@ -17,6 +17,14 @@
 }
 */
 
+.controls-fixed {
+    width: 100%;
+    background-color: #004d40;
+    position: fixed;
+    z-index: 997;
+    bottom: 200px;
+}
+
 .entry-container {
   background-color: red;
   width: 100%;

@@ -21,7 +21,7 @@
 
       <main>
 
-        <div class="container">
+        <div class="container" style="transform: translate(0,0); height: 100%">
           <ui-view></ui-view>
         </div>
 
@@ -39,6 +39,7 @@
         </div>
       </footer>
       -->
+
       <ng-include src="'./modals/auth.template.html'" modal-init></ng-include>
       `
     })
@@ -104,6 +105,7 @@
         .then(function(response) {
           if (response.success === true) {
             console.log("now logged in")
+
             console.log(response)
             vm.formMode = response.formMode;
             vm.loginMode = response.loginMode;

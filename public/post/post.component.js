@@ -10,9 +10,6 @@
       template: `
       <div class="row row-mod">
 
-        <!--<div ng-controller="controller" class="col s2 m4 l4" ng-repeat="box in curBoxes">-->
-        <!--<div class="col s2 m4 l4" ng-repeat="box in $ctrl.curBoxes">-->
-
         <div class="col s2 m4 l4" ng-repeat="box in $ctrl.curBoxes track by $index">
 
             <div style="position: relative">
@@ -29,16 +26,33 @@
                 <div ng-if="($index < 3)" style="padding-bottom:75px"></div>
                 <div ng-if="($index > 3)" style="padding-bottom:15px"></div>
             </div>
-
         </div>
 
-      <div class="page-container">
-      <button ng-click="$ctrl.launchEditor()" class="btn waves-effect waves-light" type="submit" name="action">Add a box!
-      <!-- <i class="material-icons right">send</i> -->
-      </button>
+
+
+                            <div style="position: fixed; width: 100%; bottom: 50px">
+
+                            <div style="display: flex; flex-direction: column; align-items: center">
+
+                            <div style="display: block">
+                            <button ng-click="$ctrl.launchEditor()" class="btn waves-effect waves-light" type="submit" name="action">Add a box!
+                            </button>
+                            </div>
+                            <div style="display: block">
+                            <div id="pgn-container">
+                            </div>
+
+                            </div>
+
+                            </div>
+
+
+
+
+
       </div>
-      <div id="pgn-container" class="page-container">
-      </div>
+
+
       `
     })
     /*
@@ -67,6 +81,9 @@
             // the "href" attribute of the modal trigger must specify the modal ID that wants to be triggered
             $('.modal').modal();
           });
+
+          //style ui-view under body to fill up whole body
+          $("#body-ui").css("height","100%");
         }
       }
     });

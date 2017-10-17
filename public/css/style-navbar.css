@@ -2,6 +2,11 @@
   margin-left: 15px;
   color: black;
 }
+navbar {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
 
 nav {
   color: none;
