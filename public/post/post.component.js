@@ -8,13 +8,18 @@
       // },
       controller: controller,
       template: `
+      <button ng-click="$ctrl.loadPage(0)">Page 1</button>
+      <button ng-click="$ctrl.loadPage(1)">Page 2</button>
       <div class="row row-mod">
 
         <div class="col s2 m4 l4" ng-repeat="box in $ctrl.curBoxes track by $index">
 
             <div style="position: relative">
+
               <p style="position: absolute; margin-top: 5px; margin-left: 5px; margin-bottom: 0">Box id No. {{ box.id }}</p>
-                <canvas id={{box.id}} class="canvas-style" canvas-init></canvas>
+
+                  <canvas-init></canvas-init>
+
               <div style="position: absolute; margin-top: -30px; margin-left: 5px; display: inline-block; float: left">
                 <a style="margin-bottom: 0; margin-left: 0" ng-click="$ctrl.update(box)" style="display: inline-block" ng-if="box.self == true">edit</a>
                 <a style="margin-bottom: 0; margin-left: 0" ng-click="$ctrl.delete(box)" style="display: inline-block" ng-if="box.self == true">delete</a>
@@ -39,9 +44,12 @@
                             </button>
                             </div>
                             <div style="display: block">
+
+                            <paginator></paginator>
+                            <!--
                             <div id="pgn-container">
                             </div>
-
+                            -->
                             </div>
 
                             </div>
@@ -72,21 +80,44 @@
     //as genBox() needs a canvas element in the dom to work.
     .directive('canvasInit', function() {
       return {
+        template: `
+          <canvas class="canvas-style">
+          </canvas>
+        `,
         link: function($scope, element, attrs) {
-          let canvas = element[0];
+          console.log('hello')
+          let canvas = element.find('canvas')[0];
 
-          $scope.$parent.$ctrl.genBox($scope.box, canvas)
+          $scope.$watch('box', function(newValue, oldValue) {
+            $scope.$parent.$ctrl.genBox(newValue, canvas)
+          });
+
           //needed for materialize modal stuff to work
           $(document).ready(function() {
             // the "href" attribute of the modal trigger must specify the modal ID that wants to be triggered
             $('.modal').modal();
           });
 
-          //style ui-view under body to fill up whole body
+          //style ui-view under body to fill up whole body - should this be ng-style?
           $("#body-ui").css("height","100%");
-        }
+        },
       }
-    });
+    })
+    .directive('paginator', function() {
+      return {
+        template: `
+          <ul ng-if="$ctrl.numPages > 1" class="pagination">
+            <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
+            <li ng-repeat="i in [].constructor(5) track by $index" class="active">sf</li>
+
+            <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+          </ul>
+          `,
+          link: function($scope, element, attrs) {
+            console.log('hello from paginator')
+          },
+        }
+      });
 
   controller.$inject = ['$state', '$http', 'authService', 'updateService'];
 
@@ -156,7 +187,6 @@
       vm.curBoxes = newBoxes;
 
       console.log(vm.curBoxes);
-
     }
 
     vm.test = function() {
@@ -207,6 +237,10 @@
       }
 
       //event handler for this paginator
+      // $scope.$watch('box', function(newValue, oldValue) {
+      //   $scope.$parent.$ctrl.genBox(newValue, canvas)
+      // });
+
       pgnUl.on('click', 'li', function() {
         let $curEle = $(this);
         let i = $(this).index()
@@ -234,7 +268,8 @@
       })
 
       pgnUl.append(pgnRightLi)
-      $('#pgn-container').append(pgnUl[0])
+      // pagination
+      // $('#pgn-container').append(pgnUl[0])
     }
     //
     // vm.formSubmit = function() {

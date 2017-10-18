@@ -469,9 +469,9 @@
       console.log("newBoxMin", newBoxMin)
       console.log("newBoxMax", newBoxMax)
 
-
       // console.log(newBox)
       if (updateService.box === null) {
+        console.log("post will be called")
         let newBox = {
           width: Math.abs(newBoxMin.x) + Math.abs(newBoxMax.x),
           height: Math.abs(newBoxMin.y) + Math.abs(newBoxMax.y),
