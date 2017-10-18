@@ -459,15 +459,10 @@
 
     vm.actionSubmit = function() {
       console.log("actionSubmit: ", authService.box)
-      console.log(vm.box01._boundingInfo.boundingBox.minimum)
-      console.log(vm.box01._boundingInfo.boundingBox.maximum)
 
       //use boxe's bounding box to get w,h,d size of new box
       let newBoxMin = vm.box01._boundingInfo.boundingBox.minimum;
       let newBoxMax = vm.box01._boundingInfo.boundingBox.maximum;
-
-      console.log("newBoxMin", newBoxMin)
-      console.log("newBoxMax", newBoxMax)
 
       // console.log(newBox)
       if (updateService.box === null) {
@@ -490,9 +485,6 @@
             console.log("box insert fail: ", response)
           })
       } else {
-        console.log("patch will be called")
-        console.log("from else newBoxMin", newBoxMin)
-        console.log("from else newBoxMax", newBoxMax)
         let newBox = {
           id: updateService.box.id,
           user_id: updateService.box.user_id,

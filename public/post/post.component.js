@@ -8,8 +8,8 @@
       // },
       controller: controller,
       template: `
-      <button ng-click="$ctrl.loadPage(0)">Page 1</button>
-      <button ng-click="$ctrl.loadPage(1)">Page 2</button>
+      <!-- <button ng-click="$ctrl.loadPage(0)">Page 1</button> -->
+      <!-- <button ng-click="$ctrl.loadPage(1)">Page 2</button> -->
       <div class="row row-mod">
 
         <div class="col s2 m4 l4" ng-repeat="box in $ctrl.curBoxes track by $index">
@@ -85,7 +85,10 @@
           </canvas>
         `,
         link: function($scope, element, attrs) {
-          console.log('hello')
+          /*
+          let canvas = element[0];
+          $scope.$parent.$ctrl.genBox($scope.box, canvas)
+          */
           let canvas = element.find('canvas')[0];
 
           $scope.$watch('box', function(newValue, oldValue) {
@@ -108,16 +111,26 @@
         template: `
           <ul ng-if="$ctrl.numPages > 1" class="pagination">
             <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-            <li ng-repeat="i in [].constructor(5) track by $index" class="active">sf</li>
+
+            <li ng-repeat="i in [].constructor($ctrl.numPages) track by $index" class="waves-effect" ng-click="$ctrl.loadPage($index)">
+              <a href="#!">{{$index+1}}</a>
+            </li>
 
             <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
           </ul>
           `,
+          /*
+
+                      <li class="active"><a href="#!">1</a></li>
+                      <li class="waves-effect"><a href="#!">2</a></li>
+*/
           link: function($scope, element, attrs) {
             console.log('hello from paginator')
           },
         }
       });
+
+
 
   controller.$inject = ['$state', '$http', 'authService', 'updateService'];
 
@@ -125,7 +138,7 @@
   function controller($state, $http, authService, updateService) {
     // function controller() {
     const vm = this
-
+    console.log("hello from post controller")
     //this value is used by edit.component.js to determine if a box is being updated or created new
     updateService.box = null;
 
@@ -135,10 +148,10 @@
     vm.email = null;
     vm.password = null;
 
-    console.log("navbar controller")
+
 
     vm.$onInit = function() {
-
+      console.log("hello from post onInit")
       vm.iPage = 0;
       vm.prevPage = 1;
       vm.numPages = null;
@@ -170,6 +183,7 @@
     }
 
     vm.loadPage = function(iPage) {
+      vm.iPage=iPage
       console.log("page: ", iPage)
       let i;
       // vm.curBoxes=[];
@@ -198,79 +212,79 @@
     //this gets called on calls to post if items fit exceed current pages.
     //this gets called on calls to delete if items require less fit current pages.
     //this does not get called on calls to patch.
-    vm.buildPaginator = function() {
-      $('#pgn-container').empty()
-
-      let pgnUl = $('<ul>').addClass('pagination').attr('id', 'pgn-ul')
-
-      let pgnLeftLi = $('<li>').addClass('disabled')
-      let pgnLeftA = $('<a>').attr('href', '#!')
-      let pgnLeftI = $('<i>').addClass('material-icons').text('chevron_left')
-
-      let pgnNumLi = $('<li>') //.addClass("waves-effect") //alt class: .addClass('active')
-      let pgnNumA = $('<a>').attr('href', '#!') //.text(`${valNum}`)
-
-      let pgnRightLi = $('<li>').addClass('waves-effect')
-      let pgnRightA = $('<a>').attr('href', '#!')
-      let pgnRightI = $('<i>').addClass('material-icons').text('chevron_right')
-
-      //build paginator
-      pgnLeftA.append(pgnLeftI)
-      pgnLeftLi.append(pgnLeftA)
-
-      pgnRightA.append(pgnRightI)
-      pgnRightLi.append(pgnRightA)
-
-      pgnUl.append(pgnLeftLi)
-
-      //add number of pages needed for current load in allBoxes
-      for (let i = 1; i <= vm.numPages; i++) {
-        let li;
-        if (i === 1) {
-          li = $('<li>').addClass('active')
-            .append($('<a>').attr('href', '#!').text(`${i}`))
-        } else {
-          li = $('<li>').addClass('waves-effect')
-            .append($('<a>').attr('href', '#!').text(`${i}`))
-        }
-        pgnUl.append(li)
-      }
-
-      //event handler for this paginator
-      // $scope.$watch('box', function(newValue, oldValue) {
-      //   $scope.$parent.$ctrl.genBox(newValue, canvas)
-      // });
-
-      pgnUl.on('click', 'li', function() {
-        let $curEle = $(this);
-        let i = $(this).index()
-        console.log(i)
-        console.log(vm.numPages)
-
-        if (i === 0) {
-          //paging left
-          console.log("page left")
-        } else if (i === vm.numPages + 1) {
-          //paging right
-          console.log("page right")
-        } else {
-          //load requested page
-          console.log("load page")
-
-          let prevEle = $("#pgn-ul").find("li").eq(vm.prevPage)
-
-          prevEle.removeClass('active').addClass('waves-effect')
-          $curEle.addClass('active')
-          vm.iPage = i - 1;
-          vm.prevPage = i;
-          vm.loadPage(vm.iPage)
-        }
-      })
-
-      pgnUl.append(pgnRightLi)
-      // pagination
-      // $('#pgn-container').append(pgnUl[0])
-    }
+    // vm.buildPaginator = function() {
+    //   $('#pgn-container').empty()
+    //
+    //   let pgnUl = $('<ul>').addClass('pagination').attr('id', 'pgn-ul')
+    //
+    //   let pgnLeftLi = $('<li>').addClass('disabled')
+    //   let pgnLeftA = $('<a>').attr('href', '#!')
+    //   let pgnLeftI = $('<i>').addClass('material-icons').text('chevron_left')
+    //
+    //   let pgnNumLi = $('<li>') //.addClass("waves-effect") //alt class: .addClass('active')
+    //   let pgnNumA = $('<a>').attr('href', '#!') //.text(`${valNum}`)
+    //
+    //   let pgnRightLi = $('<li>').addClass('waves-effect')
+    //   let pgnRightA = $('<a>').attr('href', '#!')
+    //   let pgnRightI = $('<i>').addClass('material-icons').text('chevron_right')
+    //
+    //   //build paginator
+    //   pgnLeftA.append(pgnLeftI)
+    //   pgnLeftLi.append(pgnLeftA)
+    //
+    //   pgnRightA.append(pgnRightI)
+    //   pgnRightLi.append(pgnRightA)
+    //
+    //   pgnUl.append(pgnLeftLi)
+    //
+    //   //add number of pages needed for current load in allBoxes
+    //   for (let i = 1; i <= vm.numPages; i++) {
+    //     let li;
+    //     if (i === 1) {
+    //       li = $('<li>').addClass('active')
+    //         .append($('<a>').attr('href', '#!').text(`${i}`))
+    //     } else {
+    //       li = $('<li>').addClass('waves-effect')
+    //         .append($('<a>').attr('href', '#!').text(`${i}`))
+    //     }
+    //     pgnUl.append(li)
+    //   }
+    //
+    //   //event handler for this paginator
+    //   // $scope.$watch('box', function(newValue, oldValue) {
+    //   //   $scope.$parent.$ctrl.genBox(newValue, canvas)
+    //   // });
+    //
+    //   pgnUl.on('click', 'li', function() {
+    //     let $curEle = $(this);
+    //     let i = $(this).index()
+    //     console.log(i)
+    //     console.log(vm.numPages)
+    //
+    //     if (i === 0) {
+    //       //paging left
+    //       console.log("page left")
+    //     } else if (i === vm.numPages + 1) {
+    //       //paging right
+    //       console.log("page right")
+    //     } else {
+    //       //load requested page
+    //       console.log("load page")
+    //
+    //       let prevEle = $("#pgn-ul").find("li").eq(vm.prevPage)
+    //
+    //       prevEle.removeClass('active').addClass('waves-effect')
+    //       $curEle.addClass('active')
+    //       vm.iPage = i - 1;
+    //       vm.prevPage = i;
+    //       vm.loadPage(vm.iPage)
+    //     }
+    //   })
+    //
+    //   pgnUl.append(pgnRightLi)
+    //   // pagination
+    //   // $('#pgn-container').append(pgnUl[0])
+    // }
     //
     // vm.formSubmit = function() {
     //   console.log("formSubmit from post")
@@ -362,9 +376,6 @@
 
           //update paginator if total num of boxes exceeds fitting on one page
           vm.numPages = Math.ceil(vm.allBoxes.length / vm.numItems)
-          if (vm.numPages > 1) {
-            vm.buildPaginator()
-          }
 
           //load whatever page is currently paged (0 defualt)
           vm.loadPage(vm.iPage)

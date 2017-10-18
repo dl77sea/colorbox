@@ -35,6 +35,7 @@
 
   function updateService() {
     const vm = this;
+    vm.iPage = 0;
     console.log("updateService entered")
     // this value assigned from post component, selected box to edit
     vm.box = null;
