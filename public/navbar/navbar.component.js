@@ -61,7 +61,7 @@
     const vm = this
     console.log("navbar controller: ", authService)
 
-    vm.email = null;
+    vm.user = null;
     vm.password = null;
 
     vm.$onInit = function() {
@@ -93,21 +93,38 @@
           alert(response.data)
         })
     }
+    vm.clearInputs = function () {
+        vm.formMessage=null;
+        vm.user = null;
+        vm.password = null;
+        $('#user').removeClass('active')
+        $('#password').removeClass('active')
+    }
 
     vm.formSubmit = function() {
       console.log("enter navbar formSubmit")
-      authService.formSubmit(vm.email, vm.password, vm.formMode)
+      authService.formSubmit(vm.user, vm.password, vm.formMode)
         .then(function(response) {
           if (response.success === true) {
             console.log("now logged in")
 
             console.log(response)
+            //happens when sign in or signup succeeds
             vm.formMode = response.formMode;
             vm.loginMode = response.loginMode;
+            vm.formMessage = response.formMessage;
+            if(vm.formMessage == 'sigininsuc') { vm.clearInputs(); }
+          } else {
+            //happens when signup fails
+            vm.formMessage = response.formMessage;
           }
         })
+        //why does this catch not happen when app.config.js goes into catch?
         .catch(function(response) {
           console.log("auth error")
+          // console.log(response)
+          vm.formMessage = response.formMessage;
+          // vm.loginMode = response.loginMode;
         })
     }
 

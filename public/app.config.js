@@ -106,12 +106,13 @@
 
           console.log("authService formSubmitSignin:", response.email)
           $('#modal-auth').modal('close');
-          return {success: true, formMode: 'signin', loginMode: 'signedin'}
+          return {success: true, formMode: 'signin', loginMode: 'signedin', formMessage: 'sigininsuc'}
         })
         //others go here
         .catch(function error(response) {
           console.log("form signin fail")
-          alert(response.data) //replace with modal expandable
+          // alert(response.data) //replace with modal expandable
+          return {success: false, formMode: 'signin', loginMode: 'signedout', formMessage: 'signinfail'}
           //status code in response.status
           //status message in response.data
         })
@@ -125,14 +126,14 @@
           console.log("form signup success")
           console.log(response.data)
           console.log(vm.formMode)
-          return {success: true, formMode: 'signin', loginMode: 'signedout'}; // vm.formMode = "signin"
+          return {success: true, formMode: 'signin', loginMode: 'signedout', formMessage: 'signupsuc'}; // vm.formMode = "signin"
         })
         //others go here
         .catch(function error(response) {
           console.log("form signup fail")
           console.log(response)
-          alert(response.data) //replace with modal expandable
-          return false;
+          //alert(response.data) //replace with modal expandable
+          return {success: false, formMessage: 'signuperr'}//return false;
           //status code in response.status
           //status message in response.data
         })

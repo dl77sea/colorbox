@@ -24,16 +24,12 @@ nav .brand-logo {
 }
 
 .modal {
-    display: none;
-    position: fixed;
-    left: 0;
-    right: 0;
-    background-color: #fafafa;
-    padding: 0;
-    max-height: 70%;
     width: 35rem;
-    margin: auto;
-    overflow-y: auto;
-    border-radius: 2px;
-    will-change: top, opacity;
+}
+
+.modal-error {
+  color: #F44336;
+}
+.modal-section {
+  padding-top: 1.5rem;
 }
