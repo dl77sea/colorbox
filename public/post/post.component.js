@@ -125,8 +125,7 @@ ng-class="{active: $ctrl.activeButton === 'list'}
           <li ng-repeat="x in products" ng-click="toggleSelection(x)"
             ng-style="{ 'class' : ({{x.alreadyTook}}) ? 'active' : 'waves-effect' }">{{x.item}}
           </li>
-
-
+          
                       <li class="active"><a href="#!">1</a></li>
                       <li class="waves-effect"><a href="#!">2</a></li>
 */
@@ -138,11 +137,12 @@ ng-class="{active: $ctrl.activeButton === 'list'}
 
 
 
-  controller.$inject = ['$state', '$http', 'authService', 'updateService'];
+  controller.$inject = ['$state', '$http', 'authService', 'updateService', '$scope'];
 
-  function controller($state, $http, authService, updateService) {
+  function controller($state, $http, authService, updateService, $scope) {
     // function controller() {
     const vm = this
+    $scope.$on('sign-in', function(e, obj) { console.log("on sign-in")})
     vm.updateService = updateService
     console.log("hello from post controller")
     //this value is used by edit.component.js to determine if a box is being updated or created new

@@ -18,15 +18,11 @@
           </nav>
         </div>
       </header>
-
       <main>
-
         <div class="container" style="transform: translate(0,0); height: 100%">
           <ui-view></ui-view>
         </div>
-
       </main>
-
       <!--
       <footer class="page-footer footer-fixed">
         <div class="footer-fixed">
@@ -39,7 +35,6 @@
         </div>
       </footer>
       -->
-
       <ng-include src="'./modals/auth.template.html'" modal-init></ng-include>
       `
     })
