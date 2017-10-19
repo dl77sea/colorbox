@@ -7,8 +7,8 @@
       //   onSave: '&' // this allows an outer component to pass in a function, basically
       // },
       controller: controller,
+      bindings: {'bSignedin': '<'},
       template: `
-
       <ng-include src="'./post/post.template.html'"></ng-include>
       `
     })
@@ -91,6 +91,7 @@ ng-class="{active: $ctrl.activeButton === 'list'}
   function controller($state, $http, authService, updateService) {
     // function controller() {
     const vm = this
+    console.log("post init bSignedin: ",  vm.bSignedin)
     // $scope.$on('sign-in', function(e, obj) { console.log("on sign-in")})
     vm.updateService = updateService
     console.log("hello from post controller")
@@ -131,9 +132,6 @@ ng-class="{active: $ctrl.activeButton === 'list'}
     //   })
     // }
 
-    vm.test = function() {
-      console.log("this is test")
-    }
 
     vm.loadPage = function(iPage) {
       console.log("loadPage index from loadPage: ", iPage)
@@ -159,9 +157,6 @@ ng-class="{active: $ctrl.activeButton === 'list'}
       console.log("vm.curBoxes from loadPage: ", vm.curBoxes);
     }
 
-    vm.test = function() {
-      console.log("test")
-    }
 
     //figure out an "angular way" to do this:
     //this gets called on init when items are more than fit on one page.
@@ -382,6 +377,7 @@ ng-class="{active: $ctrl.activeButton === 'list'}
     }
 
     vm.launchEditor = function() {
+      console.log("launchEditor bSignedin: ",  vm.bSignedin)
       //check if user is logged in
       $http.get('/api/users/auth')
         .then(function(response) {
