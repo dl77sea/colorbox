@@ -102,42 +102,48 @@
           });
 
           //style ui-view under body to fill up whole body - should this be ng-style?
-          $("#body-ui").css("height","100%");
+          $("#body-ui").css("height", "100%");
         },
       }
     })
     .directive('paginator', function() {
       return {
         template: `
-          <ul ng-if="$ctrl.numPages > 1" class="pagination">
+          <ul id="pgn-ul" ng-if="$ctrl.numPages > 1" class="pagination">
             <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
 
-            <li ng-repeat="i in [].constructor($ctrl.numPages) track by $index" class="waves-effect" ng-click="$ctrl.loadPage($index)">
+            <li ng-repeat="i in [].constructor($ctrl.numPages) track by $index" class="waves-effect"
+              ng-class="{active: $ctrl.updateService.iPage === $index}" ng-click="$ctrl.loadPage($index)">
               <a href="#!">{{$index+1}}</a>
             </li>
 
             <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
           </ul>
           `,
-          /*
+        /*
+ng-class="{active: $ctrl.activeButton === 'list'}
+          <li ng-repeat="x in products" ng-click="toggleSelection(x)"
+            ng-style="{ 'class' : ({{x.alreadyTook}}) ? 'active' : 'waves-effect' }">{{x.item}}
+          </li>
+
 
                       <li class="active"><a href="#!">1</a></li>
                       <li class="waves-effect"><a href="#!">2</a></li>
 */
-          link: function($scope, element, attrs) {
-            console.log('hello from paginator')
-          },
-        }
-      });
+        link: function($scope, element, attrs) {
+          console.log('hello from paginator')
+        },
+      }
+    });
 
 
 
   controller.$inject = ['$state', '$http', 'authService', 'updateService'];
 
-
   function controller($state, $http, authService, updateService) {
     // function controller() {
     const vm = this
+    vm.updateService = updateService
     console.log("hello from post controller")
     //this value is used by edit.component.js to determine if a box is being updated or created new
     updateService.box = null;
@@ -148,12 +154,9 @@
     vm.email = null;
     vm.password = null;
 
-
-
     vm.$onInit = function() {
       console.log("hello from post onInit")
-      vm.iPage = 0;
-      vm.prevPage = 1;
+      // updateService.iPage = 0;
       vm.numPages = null;
       vm.prevNumPages = null;
       vm.curBoxes = [];
@@ -163,10 +166,11 @@
       */
 
       //populate vm.allBoxes and get page from getBoxes.then
-      vm.getBoxes()
       vm.numItems = 6;
+      vm.getBoxes()
 
-      // vm.getPage(vm.iPage)
+
+      // vm.getPage(updateService.iPage)
     }
 
     // vm.submit = function() {
@@ -183,8 +187,11 @@
     }
 
     vm.loadPage = function(iPage) {
-      vm.iPage=iPage
-      console.log("page: ", iPage)
+      console.log("loadPage index from loadPage: ", iPage)
+
+
+      updateService.iPage = iPage
+
       let i;
       // vm.curBoxes=[];
       const newBoxes = [];
@@ -200,7 +207,7 @@
 
       vm.curBoxes = newBoxes;
 
-      console.log(vm.curBoxes);
+      console.log("vm.curBoxes from loadPage: ", vm.curBoxes);
     }
 
     vm.test = function() {
@@ -275,9 +282,9 @@
     //
     //       prevEle.removeClass('active').addClass('waves-effect')
     //       $curEle.addClass('active')
-    //       vm.iPage = i - 1;
+    //       updateService.iPage = i - 1;
     //       vm.prevPage = i;
-    //       vm.loadPage(vm.iPage)
+    //       vm.loadPage(updateService.iPage)
     //     }
     //   })
     //
@@ -366,20 +373,62 @@
       });
     }
 
-    vm.getBoxes = function() {
+    vm.getBoxes = function(typeOp = updateService.typeOp) {
       //load up all the boxes to front end but do not render them.
       //rendering will be front-end paginated
       $http.get('/api/boxes')
         .then(function(response) {
           console.log("allBoxes: ", response.data)
-          vm.allBoxes = response.data;
+          console.log("vm.curBoxes from get: ", vm.curBoxes)
+          vm.allBoxes = response.data
+
+
 
           //update paginator if total num of boxes exceeds fitting on one page
           vm.numPages = Math.ceil(vm.allBoxes.length / vm.numItems)
 
-          //load whatever page is currently paged (0 defualt)
-          vm.loadPage(vm.iPage)
+          //load whatever page needs to be loaded (0 defualt)
+          switch (typeOp) {
+            case "init":
+              vm.loadPage(updateService.iPage)
+              break;
+            case "editAdd":
+              console.log("---")
+              console.log("updateService.iPage: ", updateService.iPage)
+              console.log("updateService.prevAllBoxesLen: ", updateService.prevAllBoxesLen)
+              console.log("vm.allBoxes.length: ", vm.allBoxes.length)
+              console.log("---")
+              if (updateService.prevAllBoxesLen === vm.allBoxes.length) {
+                console.log("this happened1")
+                vm.loadPage(updateService.iPage)
+              } else {
+                console.log("this happened2")
+                updateService.iPage = (vm.numPages - 1)
+                vm.loadPage(updateService.iPage)
+              }
+              break;
+            case "del":
 
+              if( (vm.allBoxes.length+1) - (updateService.iPage*vm.numItems) === 1) {
+                updateService.iPage = (updateService.iPage - 1)
+                vm.loadPage(updateService.iPage)
+              } else {
+                vm.loadPage(updateService.iPage)
+              }
+
+              break;
+
+            default:
+              // code block
+          }
+
+          updateService.prevAllBoxesLen = vm.allBoxes.length
+
+          // //if current screen is full, go to last page
+          // if( (updateService.iPage+1)*vm.numItems - vm.allBoxes.length === 0) {
+          //   updateService.iPage = (vm.numPages-1)
+          //   vm.loadPage(updateService.iPage)
+          // }
         })
     }
 
@@ -407,6 +456,7 @@
       console.log("enter post delete")
       $http.delete('/api/boxes/' + box.id)
         .then(function() {
+          updateService.typeOp = "del"
           vm.getBoxes()
         })
         .catch(function() {

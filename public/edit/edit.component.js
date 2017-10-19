@@ -479,6 +479,7 @@
         $http.post('/api/boxes/', newBox)
           .then(function(response) {
             console.log("box insert success")
+            updateService.typeOp = "editAdd"
             $state.go('posts')
           })
           .catch(function(response) {
@@ -497,6 +498,7 @@
           .then(function(response) {
             console.log("box insert success")
             updateService.box = null //i think this is needed bc init does not fre on $state.go?
+            updateService.typeOp = "editAdd"
             $state.go('posts')
           })
           .catch(function(response) {

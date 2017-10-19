@@ -34,9 +34,15 @@
   }
 
   function updateService() {
+
     const vm = this;
     vm.iPage = 0;
-    console.log("updateService entered")
+    vm.prevAllBoxesLen=0;
+    vm.currentTarget = undefined;
+
+    // these are used to track which page paginator goes to after user operation
+    vm.typeOp = "init" //addEdit, del
+
     // this value assigned from post component, selected box to edit
     vm.box = null;
   }
