@@ -12,7 +12,7 @@ navbar {
 nav {
   color: none;
   box-shadow: none;
-  background-color: white;
+  background-color: transparent;
 }
 
 nav ul a {

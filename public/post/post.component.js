@@ -8,59 +8,8 @@
       // },
       controller: controller,
       template: `
-      <!-- <button ng-click="$ctrl.loadPage(0)">Page 1</button> -->
-      <!-- <button ng-click="$ctrl.loadPage(1)">Page 2</button> -->
-      <div class="row row-mod">
 
-        <div class="col s2 m4 l4" ng-repeat="box in $ctrl.curBoxes track by $index">
-
-            <div style="position: relative">
-
-              <p style="position: absolute; margin-top: 5px; margin-left: 5px; margin-bottom: 0">Box id No. {{ box.id }}</p>
-
-                  <canvas-init></canvas-init>
-
-              <div style="position: absolute; margin-top: -30px; margin-left: 5px; display: inline-block; float: left">
-                <a style="margin-bottom: 0; margin-left: 0" ng-click="$ctrl.update(box)" style="display: inline-block" ng-if="box.self == true">edit</a>
-                <a style="margin-bottom: 0; margin-left: 0" ng-click="$ctrl.delete(box)" style="display: inline-block" ng-if="box.self == true">delete</a>
-              </div>
-              <div style="position: relative; float: right">
-                <p style="margin-bottom: 0; margin-right: 10px; margin-top: -30px">by {{ box.email }}</p>
-              </div>
-              </div>
-                <div ng-if="($index < 3)" style="padding-bottom:75px"></div>
-                <div ng-if="($index > 3)" style="padding-bottom:15px"></div>
-            </div>
-        </div>
-
-
-
-                            <div style="position: fixed; width: 100%; bottom: 50px">
-
-                            <div style="display: flex; flex-direction: column; align-items: center">
-
-                            <div style="display: block">
-                            <button ng-click="$ctrl.launchEditor()" class="btn waves-effect waves-light" type="submit" name="action">Add a box!
-                            </button>
-                            </div>
-                            <div style="display: block">
-
-                            <paginator></paginator>
-                            <!--
-                            <div id="pgn-container">
-                            </div>
-                            -->
-                            </div>
-
-                            </div>
-
-
-
-
-
-      </div>
-
-
+      <ng-include src="'./post/post.template.html'"></ng-include>
       `
     })
     /*
@@ -125,7 +74,7 @@ ng-class="{active: $ctrl.activeButton === 'list'}
           <li ng-repeat="x in products" ng-click="toggleSelection(x)"
             ng-style="{ 'class' : ({{x.alreadyTook}}) ? 'active' : 'waves-effect' }">{{x.item}}
           </li>
-          
+
                       <li class="active"><a href="#!">1</a></li>
                       <li class="waves-effect"><a href="#!">2</a></li>
 */
