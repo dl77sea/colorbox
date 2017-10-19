@@ -73,7 +73,7 @@
         .then(function(response) {
           console.log("auth success", response)
           vm.loginMode = "signedin"
-          $scope.$emit('eventName', { message: "msg" });
+
         })
         .catch(function(response) {
           console.log("auth fail")
@@ -90,6 +90,9 @@
           vm.formMode = "signin"
           vm.loginMode = "signedout"
           console.log("signed out success")
+
+          $scope.$broadcast('eventName', { message: "msg" });
+
         })
         .catch(function(response) {
           alert(response.data)
@@ -108,6 +111,7 @@
       authService.formSubmit(vm.user, vm.password, vm.formMode)
         .then(function(response) {
           if (response.success === true) {
+            $scope.$broadcast('eventName', { message: "msg" });
             console.log("now logged in")
 
             console.log(response)
@@ -116,19 +120,20 @@
             vm.loginMode = response.loginMode;
             vm.formMessage = response.formMessage;
             if(vm.formMessage == 'sigininsuc') { vm.clearInputs(); vm.bSignedin = true; }
-          } else {
-            //happens when signup fails
-            console.log("this happens instead of catch")
-            vm.formMessage = response.formMessage;
           }
+          // else {
+          //   //happens when signup fails
+          //   console.log("this happens instead of catch")
+          //   vm.formMessage = response.formMessage;
+          // }
         })
-        // //why does this catch not happen when app.config.js goes into catch?
-        // .catch(function(response) {
-        //   console.log("auth error")
-        //   // console.log(response)
-        //   vm.formMessage = response.formMessage;
-        //   // vm.loginMode = response.loginMode;
-        // })
+        //why does this catch not happen when app.config.js goes into catch?
+        .catch(function(response) {
+          console.log("auth error from catch")
+          // console.log(response)
+          vm.formMessage = response.formMessage;
+          // vm.loginMode = response.loginMode;
+        })
     }
 
   }

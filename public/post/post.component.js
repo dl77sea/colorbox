@@ -86,13 +86,15 @@ ng-class="{active: $ctrl.activeButton === 'list'}
 
 
 
-  controller.$inject = ['$state', '$http', 'authService', 'updateService'];
+  controller.$inject = ['$state', '$http', 'authService', 'updateService', '$scope'];
 
-  function controller($state, $http, authService, updateService) {
+  function controller($state, $http, authService, updateService, $scope) {
     // function controller() {
     const vm = this
     console.log("post init bSignedin: ",  vm.bSignedin)
-    // $scope.$on('sign-in', function(e, obj) { console.log("on sign-in")})
+
+    $scope.$on('eventName', function(e, obj) { console.log("on sign-in")})
+
     vm.updateService = updateService
     console.log("hello from post controller")
     //this value is used by edit.component.js to determine if a box is being updated or created new
@@ -135,7 +137,6 @@ ng-class="{active: $ctrl.activeButton === 'list'}
 
     vm.loadPage = function(iPage) {
       console.log("loadPage index from loadPage: ", iPage)
-
 
       updateService.iPage = iPage
 
@@ -337,11 +338,6 @@ ng-class="{active: $ctrl.activeButton === 'list'}
               vm.loadPage(updateService.iPage)
               break;
             case "editAdd":
-              console.log("---")
-              console.log("updateService.iPage: ", updateService.iPage)
-              console.log("updateService.prevAllBoxesLen: ", updateService.prevAllBoxesLen)
-              console.log("vm.allBoxes.length: ", vm.allBoxes.length)
-              console.log("---")
               if (updateService.prevAllBoxesLen === vm.allBoxes.length) {
                 console.log("this happened1")
                 vm.loadPage(updateService.iPage)
@@ -352,7 +348,6 @@ ng-class="{active: $ctrl.activeButton === 'list'}
               }
               break;
             case "del":
-
               if( (vm.allBoxes.length+1) - (updateService.iPage*vm.numItems) === 1) {
                 updateService.iPage = (updateService.iPage - 1)
                 vm.loadPage(updateService.iPage)

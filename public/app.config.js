@@ -112,7 +112,7 @@
         .catch(function error(response) {
           console.log("form signin fail")
           // alert(response.data) //replace with modal expandable
-          return {success: false, formMode: 'signin', loginMode: 'signedout', formMessage: 'signinfail'}
+          throw {success: false, formMode: 'signin', loginMode: 'signedout', formMessage: 'signinfail'}
           //status code in response.status
           //status message in response.data
         })
