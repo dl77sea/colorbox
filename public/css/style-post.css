@@ -1,14 +1,4 @@
-.row .col {
-    float: left;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    padding: 0 .75rem;
-    padding-top: 0px;
-    padding-right: 4rem;
-    padding-bottom: 0px;
-    padding-left: 4rem;
-    min-height: 1px;
-}
+
 
 /*
 .grid-helper #boxes div:nth-child(-n+3) {
@@ -16,6 +6,12 @@
   background-color: red;
 }
 */
+
+.row .col {
+    padding-right: 0;
+    padding-left: 0;
+}
+
 
 .controls-fixed {
     width: 100%;
@@ -59,8 +55,6 @@
   margin-top: -30px;
   margin-right: 5px;
 }
-
-
 
 .row-mod {
   padding-top: 25px;

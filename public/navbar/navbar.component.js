@@ -54,9 +54,9 @@
       }
     });
 
-  controller.$inject = ['$state', '$http', 'authService'];
+  controller.$inject = ['$state', '$http', 'authService', '$scope'];
 
-  function controller($state, $http, authService) {
+  function controller($state, $http, authService, $scope) {
 
     const vm = this
     console.log("navbar controller: ", authService)
@@ -72,6 +72,7 @@
         .then(function(response) {
           console.log("auth success", response)
           vm.loginMode = "signedin"
+          $scope.$emit('eventName', { message: "msg" });
         })
         .catch(function(response) {
           console.log("auth fail")
@@ -116,16 +117,17 @@
             if(vm.formMessage == 'sigininsuc') { vm.clearInputs(); }
           } else {
             //happens when signup fails
+            console.log("this happens instead of catch")
             vm.formMessage = response.formMessage;
           }
         })
-        //why does this catch not happen when app.config.js goes into catch?
-        .catch(function(response) {
-          console.log("auth error")
-          // console.log(response)
-          vm.formMessage = response.formMessage;
-          // vm.loginMode = response.loginMode;
-        })
+        // //why does this catch not happen when app.config.js goes into catch?
+        // .catch(function(response) {
+        //   console.log("auth error")
+        //   // console.log(response)
+        //   vm.formMessage = response.formMessage;
+        //   // vm.loginMode = response.loginMode;
+        // })
     }
 
   }

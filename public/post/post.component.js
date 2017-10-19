@@ -86,12 +86,12 @@ ng-class="{active: $ctrl.activeButton === 'list'}
 
 
 
-  controller.$inject = ['$state', '$http', 'authService', 'updateService', '$scope'];
+  controller.$inject = ['$state', '$http', 'authService', 'updateService'];
 
-  function controller($state, $http, authService, updateService, $scope) {
+  function controller($state, $http, authService, updateService) {
     // function controller() {
     const vm = this
-    $scope.$on('sign-in', function(e, obj) { console.log("on sign-in")})
+    // $scope.$on('sign-in', function(e, obj) { console.log("on sign-in")})
     vm.updateService = updateService
     console.log("hello from post controller")
     //this value is used by edit.component.js to determine if a box is being updated or created new
