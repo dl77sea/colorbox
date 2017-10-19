@@ -59,6 +59,7 @@
   function controller($state, $http, authService, $scope) {
 
     const vm = this
+
     console.log("navbar controller: ", authService)
 
     vm.user = null;
@@ -66,7 +67,7 @@
 
     vm.$onInit = function() {
       console.log("init navbar")
-
+      vm.bSignedin = false;
       //check if user logged in (token valid) might not need to leave this in navbar?
       $http.get('/api/users/auth')
         .then(function(response) {
@@ -114,7 +115,7 @@
             vm.formMode = response.formMode;
             vm.loginMode = response.loginMode;
             vm.formMessage = response.formMessage;
-            if(vm.formMessage == 'sigininsuc') { vm.clearInputs(); }
+            if(vm.formMessage == 'sigininsuc') { vm.clearInputs(); vm.bSignedin = true; }
           } else {
             //happens when signup fails
             console.log("this happens instead of catch")
