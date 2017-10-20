@@ -277,7 +277,7 @@ ng-class="{active: $ctrl.activeButton === 'list'}
       // camera.position.z = 0;
 
       // This attaches the camera to the canvas
-      camera.attachControl(canvas, false);
+      // camera.attachControl(canvas, false);
 
       var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(-50, 100, 0), scene);
 
