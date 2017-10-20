@@ -59,14 +59,14 @@
       return {
         template: `
           <ul id="pgn-ul" ng-if="$ctrl.numPages > 1" class="pagination">
-            <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
+            <li class="disabled"><a><i class="material-icons">chevron_left</i></a></li>
 
             <li ng-repeat="i in [].constructor($ctrl.numPages) track by $index" class="waves-effect"
               ng-class="{active: $ctrl.updateService.iPage === $index}" ng-click="$ctrl.loadPage($index)">
-              <a href="#!">{{$index+1}}</a>
+              <a>{{$index+1}}</a>
             </li>
 
-            <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+            <li class="waves-effect"><a><i class="material-icons">chevron_right</i></a></li>
           </ul>
           `,
         /*

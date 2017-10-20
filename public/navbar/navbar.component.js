@@ -10,7 +10,7 @@
               <a ui-sref="posts" class="brand-logo">BoxEZ</a>
               <ul id="nav-mobile" class="right hide-on-med-and-down">
                 <li>
-                  <a ng-if="$ctrl.loginMode=='signedout'" class="modal-trigger" href="#modal-auth">Sign in</a>
+                  <a ng-if="$ctrl.loginMode=='signedout'" ng-click="$ctrl.openAuthModal()">Sign in</a>
                   <a ng-if="$ctrl.loginMode=='signedin'" ng-click="$ctrl.signOut()">Sign out</a>
                 </li>
               </ul>
@@ -82,7 +82,9 @@
           vm.formMode = "signin"
         })
     }
-
+    vm.openAuthModal = function() {
+      $('#modal-auth').modal('open')
+    }
     vm.signOut = function() {
       console.log("sign out")
       $http.delete('/api/users/auth')
@@ -98,6 +100,7 @@
           alert(response.data)
         })
     }
+
     vm.clearInputs = function () {
         vm.formMessage=null;
         vm.user = null;

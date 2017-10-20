@@ -33,7 +33,8 @@ app.use(function (err, req, res, next)  {
 
 app.use((req, res) => {
   console.log("something not found")
-  res.sendStatus(404);
+  // res.sendStatus(404);
+  res.redirect('/')
 });
 
 module.exports = app
