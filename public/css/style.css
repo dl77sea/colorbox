@@ -1,12 +1,8 @@
 body {
-    /*display: flex;*/
-    /*min-height: 100vh;*/
     height: 100vh;
-    /*flex-direction: column;*/
   }
 
   main {
-    /*flex: 1 0 auto;*/
     flex: 1 1 0;
   }
 
@@ -16,11 +12,6 @@ body {
   font-family: "Roboto", sans-serif;
   font-weight: normal;
   text-decoration: none;
-}
-
-
-.canvas-div {
-  display: block;
 }
 
 .canvas-style {

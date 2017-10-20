@@ -1,6 +1,6 @@
 (function() {
   'use strict';
-  console.log('Hello config iffe');
+
   angular.module('app').config(config)
     .service('authService', authService)
     .service('updateService', updateService)
@@ -8,8 +8,6 @@
   config.$inject = ['$stateProvider', '$urlRouterProvider', '$locationProvider']
 
   function config($stateProvider, $urlRouterProvider, $locationProvider) {
-
-    console.log('Hello config callback');
 
     $locationProvider.html5Mode(true)
 
@@ -49,7 +47,6 @@
 
   authService.$inject = ['$http'];
   function authService($http) {
-    console.log("authService entered")
 
     const vm = this;
 
@@ -67,20 +64,15 @@
     vm.username = null;
     $http.get('/api/users/auth')
       .then(function(response) {
-        console.log("authService success: ", response.data)
-        // vm.loginMode = "signedin"
-        // this.test();
         vm.username = response.data;
       })
       .catch(function(response) {
-        console.log("auth fail")
-        console.log(response)
         vm.loginMode = "signedout"
         vm.formMode = "signin"
       })
 
     vm.formSubmit = function(email, password, formMode) {
-      console.log("formSubmit")
+
       vm.formMode=formMode
 
       let data = {
@@ -105,20 +97,15 @@
       return $http.post('/api/users/signin', data)
         //200s go here
         .then(function success(response) {
-          console.log("form signin success", response)
+
           vm.username = response.email;
 
-          console.log("authService formSubmitSignin:", response.email)
           $('#modal-auth').modal('close');
           return {success: true, formMode: 'signin', loginMode: 'signedin', formMessage: 'sigininsuc'}
         })
         //others go here
         .catch(function error(response) {
-          console.log("form signin fail")
-          // alert(response.data) //replace with modal expandable
           throw {success: false, formMode: 'signin', loginMode: 'signedout', formMessage: 'signinfail'}
-          //status code in response.status
-          //status message in response.data
         })
     }
 
@@ -131,13 +118,13 @@
           vm.formEvent = null;
           console.log(response.data)
           console.log(vm.formMode)
-          return {success: true, formMode: 'signin', loginMode: 'signedout', formMessage: 'signupsuc'}; // vm.formMode = "signin"
+          return {success: true, formMode: 'signin', loginMode: 'signedout', formMessage: 'signupsuc'};
         })
         //others go here
         .catch(function error(response) {
           console.log("form signup fail")
           console.log(response)
-          //alert(response.data) //replace with modal expandable
+
           throw {success: false, formMessage: 'signuperr'}//return false;
           //status code in response.status
           //status message in response.data

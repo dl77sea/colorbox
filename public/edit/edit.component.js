@@ -3,16 +3,11 @@
     .component('edit', {
       controller: controller,
       template: `
-
-
-
-
-
 <div class="row">
 
   <div style="display: flex; flex-direction: column; align-items: center">
       <canvas id="editCanvas" class="edit-canvas"></canvas>
-      
+
     <div style="display: relative; width: 500px">
       <div style="display: flex; flex-direction: row; align-items: center">
       <a ng-class="{ctrlactive: $ctrl.controlMode === 'rotate'}" ng-click="$ctrl.actionOrbit()" style="margin-left: auto; margin-right: auto; margin-bottom: 25px" class="btn-floating btn-large waves-effect waves-light custom"><i class="material-icons">3d_rotation</i></a>
@@ -25,30 +20,15 @@
   </div>
 
 </div>
-
       `
     })
 
-    /*
-    ng-class="{active: $ctrl.updateService.iPage === $index}" ng-click="$ctrl.loadPage($index)">
-    ng-class="{'some-class':hovering}"
-    ng-mouseenter="hovering=true"
-    ng-mouseleave="hovering=false
-
-    ng-class="style"
-    */
-//<ng-include src="'./edit/edit.template.html'"></ng-include>
-  // function controller($state, $http, $stateParams) {
   controller.$inject = ['$state', '$http', 'authService', 'updateService'];
 
   function controller($state, $http, authService, updateService) {
     const vm = this
 
-
-    console.log("controller")
-    // return authService.username;
     vm.$onInit = function() {
-      console.log("inited")
 
       vm.controlMode = "rotate"; //toggle rotate to edit on button colors
 
@@ -77,9 +57,6 @@
 
       vm.camera = new BABYLON.ArcRotateCamera("ArcRotateCamera", 1, 1, 120, new BABYLON.Vector3.Zero(), vm.scene);
       vm.camera.setPosition(new BABYLON.Vector3(50, 50, -100));
-      // camera.position.x = 0;
-      // camera.position.z = 50;
-      // camera.position.z = 0;
 
       // This attaches the camera to the canvas
       vm.camera.attachControl(vm.canvas, false);
@@ -168,6 +145,7 @@
       a canvas listener clears listens for pointer-off-canvas to turn off move-mode until next click.
       */
 
+      // credit to the internet for this isEquivalent helper function
       function isEquivalent(a, b) {
         // Create arrays of property names
         var aProps = Object.getOwnPropertyNames(a);
@@ -249,7 +227,6 @@
       //box has been clicked on
       //so register an action to it that:
       //creates helper plane with action assigned
-
       vm.box01.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPickDownTrigger,
         function(event) {
           //get location clicked on, so we know where to create helper plane
@@ -269,14 +246,7 @@
 
           //create helper plane
           var planeHelper = BABYLON.Mesh.CreatePlane("plane", 200.0, vm.scene, false, BABYLON.Mesh.DOUBLESIDE);
-          /*
-          //this is needed to let plane helper mesh pass through observer
-          vm.scene.pointerMovePredicate = function(mesh) {
-            if (mesh === planeHelper)
-              return true
-            return false
-          }
-          */
+
           planeHelper.isVisible = false;
 
           function positionHelperPlane() {
@@ -367,27 +337,10 @@
           function observerCb(pointerInfo) {
 
             if (pointerInfo.event.type === "pointerup") {
-              // planeHelper.actionManager.delete()
+
               vm.scene.removeMesh(planeHelper)
-
-              //resume camera
-              // vm.camera.attachControl(vm.canvas, false);
-
-              //get rid of observers so they don't continue to fire after done editing box
-
-              console.log("removed")
-              //set box back to being pickable
-              //vm.box01.isPickable = true;
-              vm.scene.removeMesh(planeHelper)
-              // vm.scene.onPointerObservable.remove(observer1);
-
               vm.scene.onPointerObservable.remove(vm.observer2);
 
-              // vm.scene.onPointerObservable.removeCallback(observerCb);
-              // console.log("before rem am: ", vm.box01.actionManager.actions.OnPickTrigger)
-
-              // console.log("after rem am: ", vm.box01.actionManager)
-              console.log(vm.box01._boundingInfo.boundingBox)
             } else {
 
               function difPoint(curPoint, prevPoint) {
@@ -435,23 +388,19 @@
               });
               vm.box01.refreshBoundingInfo();
               vm.box01.updateVerticesData(BABYLON.VertexBuffer.PositionKind, vertices);
-            } //end else from check for action up
+            }
 
-          } //end observer2 callback
-          // console.log("before add: ", observer2)
-          console.log("has obs before add: ", vm.scene.onPointerObservable);
+          }
           vm.observer2 = vm.scene.onPointerObservable.add(observerCb);
-          console.log("has obs after add: ", vm.scene.onPointerObservable);
+
           // watch for mouse off canvas
           vm.canvas.addEventListener("mouseout", function() {
             vm.scene.removeMesh(planeHelper)
 
             vm.scene.onPointerObservable.remove(vm.observer2);
-            // vm.box01.isPickable = true;
-            // vm.box01.actionManager.dispose();
           })
 
-        })); //end pickable box action defenition
+        }));
 
     }
 
@@ -459,7 +408,6 @@
       console.log("orbit")
       vm.controlMode = "rotate";
       vm.box01.actionManager.actions = [];
-      // vm.box01.actionManager.dispose();
       vm.scene.onPointerObservable.remove(vm.observer2);
       vm.camera.attachControl(vm.canvas, false);
     }
@@ -504,7 +452,7 @@
         $http.patch('/api/boxes/' + updateService.box.id, newBox)
           .then(function(response) {
             console.log("box insert success")
-            updateService.box = null //i think this is needed bc init does not fre on $state.go?
+            updateService.box = null
             updateService.typeOp = "editAdd"
             $state.go('posts')
           })

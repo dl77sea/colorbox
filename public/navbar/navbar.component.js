@@ -42,13 +42,7 @@
     .directive('modalInit', function() {
       return {
         link: function($scope, element, attrs) {
-          // let canvas = element[0];
-          //
-          // $scope.$parent.$ctrl.genBox($scope.box, canvas)
-
-          //needed for materialize modal stuff to work
           $(document).ready(function() {
-            // the "href" attribute of the modal trigger must specify the modal ID that wants to be triggered
             $('.modal').modal();
           });
         }
@@ -67,18 +61,15 @@
     vm.password = null;
 
     vm.$onInit = function() {
-      console.log("init navbar")
       vm.bSignedin = false;
-      //check if user logged in (token valid) might not need to leave this in navbar?
+
+      //check if user logged in
       $http.get('/api/users/auth')
         .then(function(response) {
-          console.log("auth success", response)
           vm.loginMode = "signedin"
 
         })
         .catch(function(response) {
-          console.log("auth fail")
-          console.log(response)
           vm.loginMode = "signedout"
           vm.formMode = "signin"
         })
@@ -87,13 +78,10 @@
       $('#modal-auth').modal('open')
     }
     vm.signOut = function() {
-      console.log("sign out")
       $http.delete('/api/users/auth')
         .then(function(response) {
           vm.formMode = "signin"
           vm.loginMode = "signedout"
-          console.log("signed out success")
-
           $scope.$broadcast('authChange', { message: "msg" });
 
         })
@@ -103,9 +91,6 @@
     }
 
     vm.clearInputs = function () {
-        // if(vm.formMode="signup") {
-        //   vm.formEvent=='signupreq'
-        // }
         vm.formMessage=null;
         vm.user = null;
         vm.password = null;
@@ -114,14 +99,12 @@
     }
 
     vm.formSubmit = function() {
-      console.log("enter navbar formSubmit")
       authService.formSubmit(vm.user, vm.password, vm.formMode)
         .then(function(response) {
           if (response.success === true) {
 
-            console.log("now logged in")
             $scope.$broadcast('authChange', { message: "msg" });
-            console.log(response)
+
             //happens when sign in or signup succeeds
             vm.formMode = response.formMode;
             vm.loginMode = response.loginMode;
@@ -129,18 +112,9 @@
             if(vm.formMessage == 'sigininsuc') { vm.clearInputs(); vm.bSignedin = true; }
 
           }
-          // else {
-          //   //happens when signup fails
-          //   console.log("this happens instead of catch")
-          //   vm.formMessage = response.formMessage;
-          // }
         })
-        //why does this catch not happen when app.config.js goes into catch?
         .catch(function(response) {
-          console.log("auth error from catch")
-          // console.log(response)
           vm.formMessage = response.formMessage;
-          // vm.loginMode = response.loginMode;
         })
     }
 
