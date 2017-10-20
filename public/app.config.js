@@ -49,9 +49,12 @@
 
   authService.$inject = ['$http'];
   function authService($http) {
+    console.log("authService entered")
+
     const vm = this;
 
-    console.log("authService entered")
+    vm.formEvent = null;
+
 
     // vm.formMode = "signin"
     vm.username = null;
@@ -92,6 +95,7 @@
 
       if (formMode === "signup") {
         //this one is returned bc return val to component controller method determines ng-if visability.
+        vm.formEvent = 'signupreq'
         return vm.formSubmitSignup(data);
       }
     }
@@ -124,6 +128,7 @@
         //200s go here
         .then(function success(response) {
           console.log("form signup success")
+          vm.formEvent = null;
           console.log(response.data)
           console.log(vm.formMode)
           return {success: true, formMode: 'signin', loginMode: 'signedout', formMessage: 'signupsuc'}; // vm.formMode = "signin"
@@ -133,7 +138,7 @@
           console.log("form signup fail")
           console.log(response)
           //alert(response.data) //replace with modal expandable
-          return {success: false, formMessage: 'signuperr'}//return false;
+          throw {success: false, formMessage: 'signuperr'}//return false;
           //status code in response.status
           //status message in response.data
         })
