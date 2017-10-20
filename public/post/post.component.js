@@ -59,14 +59,14 @@
       return {
         template: `
           <ul id="pgn-ul" ng-if="$ctrl.numPages > 1" class="pagination">
-            <li class="disabled"><a><i class="material-icons">chevron_left</i></a></li>
+            <li ng-click="$ctrl.pageLeft($ctrl.updateService.iPage)" ng-class="{disabled: $ctrl.updateService.iPage===(0)}" class="waves-effect"><a><i class="material-icons">chevron_left</i></a></li>
 
             <li ng-repeat="i in [].constructor($ctrl.numPages) track by $index" class="waves-effect"
               ng-class="{active: $ctrl.updateService.iPage === $index}" ng-click="$ctrl.loadPage($index)">
               <a>{{$index+1}}</a>
             </li>
 
-            <li class="waves-effect"><a><i class="material-icons">chevron_right</i></a></li>
+            <li ng-click="$ctrl.pageRight($ctrl.updateService.iPage)" ng-class="{disabled: $ctrl.updateService.iPage === ($ctrl.numPages - 1)}" class="waves-effect"><a><i class="material-icons">chevron_right</i></a></li>
           </ul>
           `,
         /*
@@ -133,6 +133,21 @@ ng-class="{active: $ctrl.activeButton === 'list'}
     //     vm.test();
     //   })
     // }
+
+    vm.pageLeft = function(iPage) {
+      console.log(iPage)
+      console.log("vm.numPages: ",vm.numPages)
+      if(iPage > 0) {
+        vm.loadPage(iPage-1)
+      }
+    }
+    vm.pageRight = function(iPage) {
+      console.log(iPage)
+      console.log("vm.numPages: ",vm.numPages)
+      if(iPage < vm.numPages-1) {
+        vm.loadPage(iPage+1)
+      }
+    }
 
 
     vm.loadPage = function(iPage) {
