@@ -102,6 +102,9 @@
     }
 
     vm.clearInputs = function () {
+        // if(vm.formMode="signup") {
+        //   vm.formEvent=='signupreq'
+        // }
         vm.formMessage=null;
         vm.user = null;
         vm.password = null;

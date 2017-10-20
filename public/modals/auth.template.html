@@ -35,8 +35,9 @@
        <p class="modal-error">Username or password is incorrect. Please try again.</p>
        <section class="modal-section"></section>
      </div>
-     <div ng-if="authService.formEvent=='signupreq'">
-       <p class="modal-error">Great! Let's sign you up. Select a username and password to start creating boxes now!</p>
+
+     <div ng-if="$ctrl.formMode=='signup'">
+       <p>To start creating boxes right away, please select a username and password.</p>
        <section class="modal-section"></section>
      </div>
 
