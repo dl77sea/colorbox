@@ -93,7 +93,7 @@
           vm.loginMode = "signedout"
           console.log("signed out success")
 
-          $scope.$broadcast('eventName', { message: "msg" });
+          $scope.$broadcast('authChange', { message: "msg" });
 
         })
         .catch(function(response) {
@@ -114,15 +114,16 @@
       authService.formSubmit(vm.user, vm.password, vm.formMode)
         .then(function(response) {
           if (response.success === true) {
-            $scope.$broadcast('eventName', { message: "msg" });
-            console.log("now logged in")
 
+            console.log("now logged in")
+            $scope.$broadcast('authChange', { message: "msg" });
             console.log(response)
             //happens when sign in or signup succeeds
             vm.formMode = response.formMode;
             vm.loginMode = response.loginMode;
             vm.formMessage = response.formMessage;
             if(vm.formMessage == 'sigininsuc') { vm.clearInputs(); vm.bSignedin = true; }
+
           }
           // else {
           //   //happens when signup fails

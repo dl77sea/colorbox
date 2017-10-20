@@ -93,7 +93,7 @@ ng-class="{active: $ctrl.activeButton === 'list'}
     const vm = this
     console.log("post init bSignedin: ",  vm.bSignedin)
 
-    $scope.$on('eventName', function(e, obj) { console.log("on sign-in")})
+    $scope.$on('authChange', function(e, obj) {vm.getBoxes()})
 
     vm.updateService = updateService
     console.log("hello from post controller")
