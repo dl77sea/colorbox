@@ -4,36 +4,42 @@
       controller: controller,
       template: `
 
-      <!--<div id="boxgrid" class="row">-->
 
-      <div class="row">
-        <div class="col m3 l3"></div>
-        <div class="col s12 m6 l6">
-        <div class="col m3 l3"></div>
 
-        <div class="edit-canvas">
 
-          <canvas style="width: 100%; height: 100%; outline: none;" id="editCanvas"></canvas>
-        <a ng-click="$ctrl.actionOrbit()">
-          <i style="float: left; position: relative; margin-left: 25px; margin-top: -75px; padding: 0" class="material-icons edit-icon">3d_rotation</i></a>
-        <a ng-click="$ctrl.actionMove()">
-          <i style="float: right; position: relative; margin-right: 25px; margin-top: -75px; padding: 0" class="material-icons edit-icon">edit</i></a>
-        </div>
 
-        <div class="page-container" style="margin-top: -65px">
-         <a class="submit-icon btn-floating btn-large waves-effect waves-light red"><i ng-click="$ctrl.actionSubmit()" class="material-icons">send</i></a>
-        <!--<button ng-click="$ctrl.actionSubmit()" class="btn waves-effect waves-light" type="submit" name="action">Add a box!-->
-        <!-- <i class="material-icons right">send</i> -->
-        </button>
-        </div>
+<div class="row">
 
-        </div>
-        </div>
 
-        <!--</div>-->
-        `
+  <div style="display: flex; flex-direction: column; align-items: center">
+      <canvas id="editCanvas" class="edit-canvas"></canvas>
+
+    <div style="display: relative; width: 500px">
+      <div style="display: flex; flex-direction: row; align-items: center">
+      <a ng-click="$ctrl.actionOrbit()" style="margin-left: auto; margin-right: auto; margin-bottom: 25px" class="btn-floating btn-large waves-effect waves-light"><i class="material-icons">3d_rotation</i></a>
+
+      <a ng-click="$ctrl.actionSubmit()" style="margin: 0" class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">send</i></a>
+
+      <a ng-click="$ctrl.actionMove()" style="margin-left: auto; margin-right: auto; margin-bottom: 25px" class="btn-floating btn-large waves-effect waves-light"><i class="material-icons">edit</i></a>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+
+      `
     })
 
+
+    /*
+    ng-class="{'some-class':hovering}"
+    ng-mouseenter="hovering=true"
+    ng-mouseleave="hovering=false
+
+    ng-class="style"
+    */
+//<ng-include src="'./edit/edit.template.html'"></ng-include>
   // function controller($state, $http, $stateParams) {
   controller.$inject = ['$state', '$http', 'authService', 'updateService'];
 

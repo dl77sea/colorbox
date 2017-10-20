@@ -76,6 +76,7 @@
 .page-container {
   display: flex;
   justify-content: center;
+  /*display: relative;*/
 }
 
 .canvas-style {
