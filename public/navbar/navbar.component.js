@@ -7,8 +7,9 @@
         <div class="navbar-fixed">
           <nav>
             <div class="nav-wrapper">
-              <a ui-sref="posts" class="brand-logo">BoxEZ</a>
-              <ul id="nav-mobile" class="right hide-on-med-and-down">
+              <a ui-sref="posts" class="brand-logo left">boxEZ</a>
+              <!--<ul id="nav-mobile" class="right hide-on-med-and-down">-->
+              <ul class="right">
                 <li>
                   <a ng-if="$ctrl.loginMode=='signedout'" ng-click="$ctrl.openAuthModal()">Sign in</a>
                   <a ng-if="$ctrl.loginMode=='signedin'" ng-click="$ctrl.signOut()">Sign out</a>
