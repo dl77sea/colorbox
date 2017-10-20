@@ -10,29 +10,27 @@
 
 <div class="row">
 
-
   <div style="display: flex; flex-direction: column; align-items: center">
       <canvas id="editCanvas" class="edit-canvas"></canvas>
-
+      
     <div style="display: relative; width: 500px">
       <div style="display: flex; flex-direction: row; align-items: center">
-      <a ng-click="$ctrl.actionOrbit()" style="margin-left: auto; margin-right: auto; margin-bottom: 25px" class="btn-floating btn-large waves-effect waves-light"><i class="material-icons">3d_rotation</i></a>
+      <a ng-class="{ctrlactive: $ctrl.controlMode === 'rotate'}" ng-click="$ctrl.actionOrbit()" style="margin-left: auto; margin-right: auto; margin-bottom: 25px" class="btn-floating btn-large waves-effect waves-light custom"><i class="material-icons">3d_rotation</i></a>
 
       <a ng-click="$ctrl.actionSubmit()" style="margin: 0" class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">send</i></a>
 
-      <a ng-click="$ctrl.actionMove()" style="margin-left: auto; margin-right: auto; margin-bottom: 25px" class="btn-floating btn-large waves-effect waves-light"><i class="material-icons">edit</i></a>
+      <a ng-class="{ctrlactive: $ctrl.controlMode === 'edit'}" ng-click="$ctrl.actionMove()" style="margin-left: auto; margin-right: auto; margin-bottom: 25px" class="btn-floating btn-large waves-effect waves-light custom"><i class="material-icons">edit</i></a>
       </div>
     </div>
   </div>
-
 
 </div>
 
       `
     })
 
-
     /*
+    ng-class="{active: $ctrl.updateService.iPage === $index}" ng-click="$ctrl.loadPage($index)">
     ng-class="{'some-class':hovering}"
     ng-mouseenter="hovering=true"
     ng-mouseleave="hovering=false
@@ -46,12 +44,13 @@
   function controller($state, $http, authService, updateService) {
     const vm = this
 
+
     console.log("controller")
     // return authService.username;
     vm.$onInit = function() {
       console.log("inited")
 
-
+      vm.controlMode = "rotate"; //toggle rotate to edit on button colors
 
       if (updateService.box !== null) {
         console.log("updateService.box not null")
@@ -157,6 +156,7 @@
 
     vm.actionMove = function() {
       console.log("edit")
+      vm.controlMode = "edit";
       /*
       uses an actionmanager on the box mesh to wait for a click.
 
@@ -457,6 +457,7 @@
 
     vm.actionOrbit = function() {
       console.log("orbit")
+      vm.controlMode = "rotate";
       vm.box01.actionManager.actions = [];
       // vm.box01.actionManager.dispose();
       vm.scene.onPointerObservable.remove(vm.observer2);

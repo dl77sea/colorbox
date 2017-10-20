@@ -89,3 +89,27 @@
   touch-action: auto;
   /*padding: 0;*/
 }
+/*
+.active {
+  color: #f57f17; yellow darken-4
+}
+*/
+.pagination li.active {
+    background-color: #f57f17; /*yellow darken-4*/
+}
+/*
+.btn, .btn-large {
+    text-decoration: none;
+    color: #fff;
+    background-color:#0277bd;
+    text-align: center;
+    letter-spacing: .5px;
+    -webkit-transition: .2s ease-out;
+    transition: .2s ease-out;
+    cursor: pointer;
+}
+
+.waves-effect.waves-light {
+  background-color: red;
+}
+*/
